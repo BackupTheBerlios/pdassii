@@ -1,0 +1,65 @@
+\documentclass[12pt,a4paper,notitlepage,twoside]{report}
+\pagestyle{headings}
+\begin{document}
+\section{Casos de uso}
+\subsection{Imprimir}
+\emph{Objetivo:}
+\begin{description}
+El personal sanitario dotado de una PDA solicita la impresi\'on de un documento que se encuentre disponible en la base de datos del hospital. Dicha impresi\'on se realizará por la impresora m\'as cercana al lugar en el que se ha solicitado \'esta.
+\end{description}
+\\
+\emph{Entradas:} 
+\begin{itemize}
+\item Nombre del documento a imprimir.
+\end{itemize}
+\\
+\emph{Precondiciones:}
+\begin{description}
+Los documentos que se solicitan imprimir deben encontrarse en la base de datos del hospital.
+\end{description}
+\emph{Salidas:}
+\begin{description}
+\item En caso de \'exito: 
+\begin{itemize}
+\item Confirmaci\'on de la solicitud aceptada.
+\item Impresora por la que se va a realizar el trabajo.
+\item Documento imprimido.
+\end{itemize}
+\item En caso de fallo: 
+\begin{itemize}
+\item Se informa al usuario de la imposibilidad de realizar la petici\'on.
+\end{itemize}
+\end{description}
+\emph{Postcondici\'on si \'exito:}
+\begin{description}
+Se realiza la impresi\'on por la impresora m\'as cercana.
+\end{description}
+\emph{Postcondici\'on si fallo:}
+\begin{description}
+Se informa de que no se ha podido realizar la impresi\'on y se vuelve a donde estabamos.
+\end{description}
+\emph{Actores: }
+\begin{itemize}
+\item Usuario con PDA.
+\item Servidor del hospital.
+\item Cola de impresi\'on de las impresoras del centro.
+\item PDA.
+\end{itemize}
+\\
+\emph{Secuencia normal:} 
+\begin{enumerate}
+\item El usuario solicita al servidor la impresi\'on de un documento desde su PDA. Si error al conectar con el servidor pasa a E1, sino pasa a 2.
+\item El servidor busca en su base de datos el documento que queremos imprimir. Si lo encuentra pasa a 3, sino pasa a E2.
+\item El servidor solicita al GPS del PDA su situaci\'on y devuelve la lista de todas las impresoras ordenadas por cercania.
+\item El servidor manda el documento a la cola de la impresora m\'as cercana (primera de la lista que obtuvimos en el paso anterior). Si error en impresora pasa a E3, sino pasa a 5.
+\item El servidor envia al PDA la confirmaci\'on de impresi\'on aceptada, informando de cual es la impresora que en la que se realiza la tarea.
+\item El documento se imprime por la impresora indicada.
+\end{enumerate}
+\\
+\emph{Secuencias alternativas:}
+\begin{description}
+\item E1.- Se informa al usuario de que no se puede conectar con el servidor y se la invita a intentarlo m\'as tarde. Volvemos al punto de partida.
+\item E2.- Se informa al usuario de que el documento solicitado no se encuentra disponible en la base de datos del hospital. Volvemos al punto de partida.
+\item E3.- Si se produce un error al mandar a imprimir se elige la siguiente impresora de la lista hasta que no se produzca este error y volvemos a 5.
+\end{description}
+\end{document}
