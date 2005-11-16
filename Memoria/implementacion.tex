@@ -1,0 +1,30 @@
+\documentclass[12pt,a4paper,notitlepage,twoside]{report}
+\pagestyle{headings}
+\begin{document}
+\section{Implementaci\'on}
+\begin{description}
+La aplicaci\'on que estamos implementando es claramente una aplicaci\'on cliente-servidor. La parte de cliente, es decir, los dispositivos PDA, ser\'an implementados con J2ME y la parte de servidor con Java. Adem\'as, para la base de datos del hospital, para informaci\'on de pacientes y de personal, usaremos MySQL.
+\end{description}
+\begin{description} 
+Las conexiones entre el PDA y el servidor del hospital las haremos empleando el protocolo http, como exigen las comunicaciones cliente-servidor de estas caracter\'isticas, con la ayuda de las clases que J2ME proporciona para estos requerimientos.
+\end{description}
+\subsection{Imprimir}
+\emph{Elecci\'on de la impresora m\'as cercana}
+\begin{description}
+Proponemos un mapa de una planta del hospital (las plantas en los hospitales suelen ser sim\'etricas) con habitaciones y con el pasillo dividido en zonas . Algunas de estas zonas coincidiran con zonas de pasillo que tengan un puesto de control con impresora y otros no. Hacemos corresponder los sectores del mapa (habitaciones  o zonas de pasillo) con los nodos de un grafo valorado (para poder decidir las cercan\'ias) no dirigido (porque podemos ir en todas las direcciones). Dado un nodo que se corresponder\'a con la posici\'on del usuario que realiza la petici\'on, aplicamos el algoritmo de Dijkstra y obtendremos la lista de caminos minimos desde el nodo peticionario al resto de los nodos. A continuaci\'on tendremos que filtrar esta lista quitando los caminos que llevan a nodos que se corresponden con habitaciones o con zonas de pasillos en las que no hay impresoras disponibles, obteniendo as\'i la lista de las impresoras m\'as cercanas por orden de cercan\'ia al usuario.
+\end{description}
+\begin{description}
+Una vez obtenida la lista de las impresoras que se podrían emplear para la impresi\'on, tenemos la opci\'on de presentar dicha lista al usuario para que escoja la impresora que desea para realizar la tarea y enviar el trabajo a la cola de impresi\'on de dicha impresora o enviar directamente el trabajo a la cola de impresi\'on de la primera impresora de la lista.
+\end{description}
+\begin{description}
+La implementaci\'on de esta utilidad se podr\'ia hacer en Java (aunque cabr\'ia la posibilidad de realizarlo en alg\'un lenguaje declarativo como Prolog, que es f\'acil de integrar con Java y que demuestra una gran eficiencia a la hora de implementar b\'usquedas en \'arboles) y se alojar\'ia en el servidor del hospital.
+\end{description}
+\emph{B\'usqueda del documento a imprimir en la base de datos}
+\begin{description}
+El servidor del hospital necesitar\'a buscar el documento que queremos imprimir en la base de datos del hospital. Crearemos una clase Java que se encargue de esta comunicaci\'on y la podremos  reutilizar cada vez que necesitemos hacer consultas de este tipo en la base de datos, como ser\'ia el caso de consultar la clave de acceso cuando inicamos sesi\'on con el PDA.
+\end{description}
+\emph{Volcado de los datos en la impresora}
+\begin{description}
+Usaremos la clase Toolkit, perteneciente a al paquete java.awt, que es una clase que proporciona un interfaz independiente de plataforma para servicios espec\'ificos de dichas plataformas, como pueden ser: fuentes de caracteres, im\'agenes, impresi\'on y par\'ametros de pantalla.
+\end{description}
+\end{document}
