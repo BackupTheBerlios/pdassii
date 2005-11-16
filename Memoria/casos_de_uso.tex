@@ -7,12 +7,10 @@
 \begin{description}
 Se inicia su sesi\'on con el PDA abri\'endose as\'i la aplicaci\'on. Al iniciar la sesi\'on ser\'a necesario que el usuario introduzca una clave que de ser correcta le dar\'a acceso a los men\'us.
 \end{description}
-\\
 \emph{Entradas:} 
 \begin{itemize}
 \item Clave de usuario.
 \end{itemize}
-\\
 \emph{Precondiciones:}
 \begin{description}
 No hay precondiciones.
@@ -43,30 +41,25 @@ Se informa al usuario de que la contrase\~na no es correcta y se le ofrece la po
 \item Servidor del hospital.
 \item PDA.
 \end{itemize}
-\\
 \emph{Secuencia normal:} 
 \begin{enumerate}
 \item Al encender el PDA, se solicita al usuario que introduzca su clave personal y \'esta es enviada a la base de datos del servidor del hospital para que sea verificada.
 \item El servidor busca en su base de datos la clave de usuario que se acaba de introducir para confirmar que est\'a iniciando sesi\'on una persona autorizada, personal del hospital. En caso de que la b\'usqueda tenga \'exito pasa a 3, en caso contrario pasa a E1.
 \item Una vez confirmada la clave, el servidor manda un mensaje de bienvenida al usuario y en la PDA tenemos disponible el men\'u con todas las posibles operaciones que se pueden realizar con la aplicaci\'on.
 \end{enumerate}
-\\
 \emph{Secuencias alternativas:}
 \begin{description}
 \item E1.- Se informa al usuario de que no se su clave no es correcta y se le da la oportunidad de volver a introducirla (paso 1).
 \end{description}
-\\
 \subsection{Imprimir}
 \emph{Objetivo:}
 \begin{description}
 El personal sanitario dotado de una PDA solicita la impresi\'on de un documento que se encuentre disponible en la base de datos del hospital. Dicha impresi\'on se realizará por la impresora m\'as cercana al lugar en el que se ha solicitado \'esta.
 \end{description}
-\\
 \emph{Entradas:} 
 \begin{itemize}
 \item Nombre del documento a imprimir.
 \end{itemize}
-\\
 \emph{Precondiciones:}
 \begin{description}
 Los documentos que se solicitan imprimir deben encontrarse en la base de datos del hospital.
@@ -99,17 +92,15 @@ Se informa de que no se ha podido realizar la impresi\'on y se vuelve a donde es
 \item Cola de impresi\'on de las impresoras del centro.
 \item PDA.
 \end{itemize}
-\\
 \emph{Secuencia normal:} 
 \begin{enumerate}
 \item El usuario solicita al servidor la impresi\'on de un documento desde su PDA. Si error al conectar con el servidor pasa a E1, sino pasa a 2.
 \item El servidor busca en su base de datos el documento que queremos imprimir. Si lo encuentra pasa a 3, sino pasa a E2.
-\item El servidor solicita al GPS del PDA su situaci\'on y devuelve la lista de todas las impresoras ordenadas por cercania.
+\item El servidor calcula la posici\'on del PDA y en funci\'on de ella devuelve la lista de todas las impresoras ordenadas por cercan\'ia.
 \item El servidor manda el documento a la cola de la impresora m\'as cercana (primera de la lista que obtuvimos en el paso anterior). Si error en impresora pasa a E3, sino pasa a 5.
 \item El servidor envia al PDA la confirmaci\'on de impresi\'on aceptada, informando de cual es la impresora que en la que se realiza la tarea.
-\item El documento se imprime por la impresora indicada.
+\item El usuario que ha solicitado la impresi\'on confirma su llegada a la impresora y autoriza la impresi\'on fisica en ese momento.
 \end{enumerate}
-\\
 \emph{Secuencias alternativas:}
 \begin{description}
 \item E1.- Se informa al usuario de que no se puede conectar con el servidor y se la invita a intentarlo m\'as tarde. Volvemos al punto de partida.
