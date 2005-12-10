@@ -24,6 +24,7 @@ public class JavaServer {
             // Invoke me as <http://localhost:8080/RPC2>.
             WebServer server = new WebServer(8080);
             server.addHandler("pruebaxml", new JavaServer());
+            server.addHandler("bd", new BaseDatos("bdpersonal", "maria", "1829"));
             server.start();
 
         } catch (Exception exception) {

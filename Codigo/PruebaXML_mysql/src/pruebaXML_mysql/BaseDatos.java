@@ -219,7 +219,7 @@ public class BaseDatos{
       return retorno;
     }
     
-    private String consultarClave(String nombreTabla, String nombreUsuario){
+    public String consultarClave(String nombreTabla, String nombreUsuario){
 	String retorno="CLAVE\n-----\n";
 	try {
 	  Connection con = abrirConexion();

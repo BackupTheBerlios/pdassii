@@ -18,15 +18,21 @@ public class JavaClient {
             System.out.println("he creado un cliente");
             // Build our parameter list.
             Vector params = new Vector();
-            params.addElement(new Integer(5));
+            /*params.addElement(new Integer(5));
             params.addElement(new Integer(3));
-            System.out.println("he añadido los parametros");
+            System.out.println("he añadido los parametros");*/
 
             // Call the server, and get our result.
-            Hashtable result =
+            /*Hashtable result =
                 (Hashtable) server.execute("pruebaxml.sumAndDifference", params);
             int sum = ((Integer) result.get("sum")).intValue();
-            int difference = ((Integer) result.get("difference")).intValue();
+            int difference = ((Integer) result.get("difference")).intValue();*/
+            
+            //params.clear();
+            params.addElement(new String("pepe"));
+            params.addElement(new String("maria"));
+            String clave = (String) server.execute("bd.consultarClave", params);
+            System.out.println("la clave de maria en pepe es: "+clave);
             
            /*
             System.out.println("Voy a mandar los datos");
@@ -34,9 +40,9 @@ public class JavaClient {
 	        System.out.println(result);
 */	        
             // Print out our result.
-            System.out.println("Sum: " + Integer.toString(sum) +
+            /*System.out.println("Sum: " + Integer.toString(sum) +
                                ", Difference: " +
-                               Integer.toString(difference));
+                               Integer.toString(difference));*/
 	    
 	        
         } catch (XmlRpcException exception) {
