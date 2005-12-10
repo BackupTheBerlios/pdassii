@@ -1,0 +1,7 @@
+MIDlet-Version: 1.0.0
+MIDlet-Jar-URL: SSII.jar
+MIDlet-Vendor: Midlet Suite Vendor
+MIDlet-1: Inicio,,Inicio.Inicio
+MicroEdition-Profile: MIDP-2.0
+MicroEdition-Configuration: CLDC-1.1
+MIDlet-Name: SSII Midlet Suite
