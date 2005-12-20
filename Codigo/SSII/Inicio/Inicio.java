@@ -6,9 +6,16 @@
 
 package Inicio;
 
+import java.util.Vector;
+
 import javax.microedition.lcdui.*;
 import javax.microedition.midlet.*;
-//import java.lang.System;
+//import javax.microedition.xml.rpc.*;
+
+//import org.apache.xmlrpc.XmlRpcException;
+import org.kxmlrpc.*;
+import org.kxmlrpc.XmlRpcClient;
+import java.util.*;
 
 public class Inicio extends MIDlet implements CommandListener{
 	
@@ -21,7 +28,7 @@ public class Inicio extends MIDlet implements CommandListener{
 	private boolean enter = false;
 
 
-	public void startApp(){
+	public void startApp() {
 //MÉTODO QUE LANZA LA EJECUCIÓN DEL MIDLET
 		
 		String aux1, aux2;
@@ -46,8 +53,37 @@ public class Inicio extends MIDlet implements CommandListener{
 		enter = false;
 		TextBox tb2 = (TextBox)display.getCurrent();
 		aux2 = tb2.getString();
-		//System.out.println(aux1);
-		//System.out.println(aux2);
+		//System.out.println("he añadido los parametros");
+		org.kxmlrpc.XmlRpcClient xrc = new org.kxmlrpc.XmlRpcClient("http://localhost:8080"); 
+		System.out.println("he creado un cliente");
+		
+		Vector params = new Vector();
+		/*params.addElement(new Integer(5));
+        params.addElement(new Integer(3));
+        System.out.println("he añadido los parametros");*/
+
+        // Call the server, and get our result.
+        /*Hashtable result =
+            (Hashtable) xrc.execute("pruebaxml.sumAndDifference", params);
+        int sum = ((Integer) result.get("sum")).intValue();
+        int difference = ((Integer) result.get("difference")).intValue();*/
+
+		params.addElement(new String(aux1));
+        params.addElement(new String(aux2));
+        System.out.println("he añadido los parametros");
+        try{
+        	String clave = (String) xrc.execute("bd.consultarClave", params);
+        	System.out.println("clave: "+clave);
+        	/*Hashtable result =
+                (Hashtable) xrc.execute("pruebaxml.sumAndDifference", params);
+        	System.out.println("he vuelto de la llamada al servidor");
+            int sum = ((Integer) result.get("sum")).intValue();
+            System.out.println("sum: "+sum);
+            int difference = ((Integer) result.get("difference")).intValue();
+            System.out.println("difference: "+difference);*/
+        } catch (Exception exception) {
+            System.err.println("JavaClient: " + exception.getMessage());
+        }
 		
 	}
 
