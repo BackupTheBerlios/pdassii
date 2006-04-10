@@ -5,10 +5,8 @@ package triangulacion;
  *
  */
 public class antena {
-	int x; //coordenada en anchura
-	int y; //coordenada en altura
-	int z; //coordenada en profundidad
-	int d; //distancia al punto a localizar
+	punto p;
+	double d; //distancia al punto a localizar
 	
 	/**
 	 * Constructor por defecto, crea una antena en el origen.
@@ -16,9 +14,7 @@ public class antena {
 	 */
 	
 	public antena() {
-		x = 0;
-		y = 0;
-		z = 0;
+		p = new punto();
 		d = 0;
 	}
 	
@@ -27,57 +23,56 @@ public class antena {
 	 *(x, y, z) que indicamos.
 	 * La distancia al punto a localizar es d.
 	 */
-	public antena(int x, int y, int z, int d) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+	public antena(double x, double y, double z, double d) {
+		punto p = new punto(x, y, z);
+		this.p = p;
 		this.d = d;
 	}
 	
 	/**
 	 * Accesores y mutadores para todos 
-	 * los parámetros de la clase.
+	 * los parametros de la clase.
 	 */
 
-	public int getD() {
+	public double getD() {
 		return d;
 	}
 
-	public void setD(int d) {
+	public void setD(double d) {
 		this.d = d;
 	}
 
-	public int getX() {
-		return x;
+	public double getX() {
+		return p.getX();
 	}
 
-	public void setX(int x) {
-		this.x = x;
+	public void setX(double x) {
+		this.p.setX(x);
 	}
 
-	public int getY() {
-		return y;
+	public double getY() {
+		return p.getY();
 	}
 
-	public void setY(int y) {
-		this.y = y;
+	public void setY(double y) {
+		this.p.setY(y);
 	}
 
-	public int getZ() {
-		return z;
+	public double getZ() {
+		return p.getZ();
 	}
 
-	public void setZ(int z) {
-		this.z = z;
+	public void setZ(double z) {
+		this.p.setZ(z);
+	}
+	
+	public punto getP() {
+		return p;
 	}
 
-
-	/**
-	 * @param args
-	 */
-	//public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	//}
-
+	public void setP(punto p) {
+		this.p.setX(p.getX());
+		this.p.setY(p.getY());
+		this.p.setZ(p.getZ());
+	}
 }

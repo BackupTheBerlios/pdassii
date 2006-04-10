@@ -1,6 +1,7 @@
 package triangulacion;
 
 import java.io.IOException;
+import java.lang.Math;
 
 /**
  * @author kat
@@ -9,7 +10,7 @@ import java.io.IOException;
 public class triangulador {
 	
 	int pidePlanta(){
-		System.out.println("Introduzca el número de planta");
+		System.out.println("Introduzca el numero de planta");
 		int c;
 		try {
 			c = System.in.read();
@@ -32,13 +33,16 @@ public class triangulador {
 	/**
 	 * @param antena a1, a2, a3, a4
 	 */
-	public static void main(antena a1, antena a2, antena a3, antena a4) {
-		int x, y, z; // punto a hallar
-		int a, b, c, d, e, f, g, h, i;
-		int x1, y1, z1, d1;
-		int x2, y2, z2, d2;
-		int x3, y3, z3, d3;
-		int x4, y4, z4, d4;
+	public static punto triangula (antena a1, antena a2, antena a3, antena a4) {
+		double x, y, z; // punto a hallar 
+		double xtemp, ytemp, ztemp; // punto a hallar sin redondeos
+		double v1, v2, v3; // vector de translacion
+		double x1, y1, z1, d1;
+		double x2, y2, z2, d2;
+		double x3, y3, z3, d3;
+		double x4, y4, z4, d4;
+		
+		//obtencion las coordenadas del centro y el radio de las esferas
 		x1 = a1.getX();
 		y1 = a1.getY();
 		z1 = a1.getZ();
@@ -55,42 +59,65 @@ public class triangulador {
 		y4 = a4.getY();
 		z4 = a4.getZ();
 		d4 = a4.getD();
-		a = (d1^2)-(d2^2)-(x1^2)+(x2^2)-(y1^2)+(y2^2)-(z1^2)+(z2^2);
-		System.out.print("A: ");
-		System.out.println(a);
-		b = (d1^2)-(d3^2)-(x1^2)+(x3^2)-(y1^2)+(y3^2)-(z1^2)+(z3^2);
-		System.out.print("B: ");
-		System.out.println(b);
-		c = (d1^2)-(d4^2)-(x1^2)+(x4^2)-(y1^2)+(y4^2)-(z1^2)+(z4^2);
-		System.out.print("C: ");
-		System.out.println(c);
-		d = (x3-x1)/(x2-x1);
-		System.out.print("D: ");
-		System.out.println(d);
-		e = (a*d -b)/2;
-		System.out.print("E: ");
-		System.out.println(e);
-		f = (d*y2) + (d*y1) - y3 + y1;
-		System.out.print("F: ");
-		System.out.println(f);
-		g = (d*z2) + (d*z1) - z3 + z1;
-		System.out.print("G: ");
-		System.out.println(g);
-		h = (a-((2*(y2-y1)*e)/f))/(x2-x1);
-		System.out.print("H: ");
-		System.out.println(h);
-		h = h - (c-((2*(y4-y1)*e)/f))/(x4-x1);
-		System.out.print("H (recalculada): ");
-		System.out.println(h);
-		i = ((2*g*(y2-y1))/f)+(2*(z4-z1))-((2*g*(y4-y1))/f)-(2*(z4-z1)); // esta línea está mal
-		System.out.print("I: ");
-		System.out.println(i);
-		z = h/i;
-		y = e-(g*z)/f;
-		x = (a - (2*y*(y2-y1)) - (2*z*(z2-z1)))/(2*(x2-x1));
-		System.out.print(x);
-		System.out.print(y);
-		System.out.print(z);
+		
+		//trasladamos los ejes, las distnacias no cambian
+		v1 = x1;
+		v2 = y1;
+		v3 = z1;
+		
+		x1 = x1 - v1;
+		y1 = y1 - v2;
+		z1 = z1 - v3;
+		x2 = x2 - v1;
+		y2 = y2 - v2;
+		z2 = z2 - v3;
+		x3 = x3 - v1;
+		y3 = y3 - v2;
+		z3 = z3 - v3;
+		
+		//resolucion analitica
+		System.out.println("Resultados sin transladar");
+		xtemp = ( ( d2 * d2 ) - ( d1 * d1 ) - ( x2 * x2 ) ) / ( -2 * x2 );
+		System.out.print("X: ");
+		System.out.print(xtemp);
+		x = Math.round( xtemp );
+		System.out.print(" redondeado: ");
+		System.out.println(x);
+		ytemp = ( ( d3 * d3 ) - ( d2 * d2 ) - ( x3 * x3 ) + ( x2 * x2 ) + ( 2 * xtemp * x3 ) - ( 2 * xtemp * x2 ) - ( y3 * y3 ) ) / ( -2 * y3 );
+		System.out.print("Y: ");
+		System.out.print(ytemp); 
+		y = Math.round( ytemp );
+		System.out.print(" redondeado: ");
+		System.out.println(y);
+		ztemp = Math.sqrt( ( d1 * d1 ) - ( x* x ) - ( y * y ) ) ;
+		System.out.print("Z: ");
+		System.out.print(ztemp);
+		z =  Math.round( ztemp );
+		System.out.print(" redondeado: ");
+		System.out.println(z);
+	
+		//reinstauracion de los ejes
+		x = x + v1;
+		y = y + v2;
+		z = z + v3;
+		System.out.println("Resultados");
+		System.out.print("X: ");
+		System.out.println(x);
+		System.out.print("Y: ");
+		System.out.println(y);
+		System.out.print("Z: ");
+		System.out.println(z);
+		//comprobamos que es correcto en la cuarta antena
+		if ( ( ( ( x4 - x ) * ( x4 - x) ) + ( ( y4 - y ) * ( y4 - y ) ) + ( ( z4 - z ) * ( z4 - z ) ) ) == ( d4 * d4 ) ){
+			System.out.println("Esta bien");
+		}
+		else{
+			System.out.println("Esta mal");
+		}
+		
+		//devolvemos el punto a localizar
+		punto p = new punto (x,y,z);
+		return p;
+		
 	}
-
 }
