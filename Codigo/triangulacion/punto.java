@@ -55,5 +55,15 @@ public class punto {
 		public void setZ(double z) {
 			this.z = z;
 		}
+		
+		public void mostrar(){
+			System.out.print("( ");
+			System.out.print(this.x);
+			System.out.print(", ");
+			System.out.print(this.y);
+			System.out.print(", ");
+			System.out.print(this.z);
+			System.out.println(" )");
+		}
 
 }
