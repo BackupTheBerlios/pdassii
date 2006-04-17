@@ -34,15 +34,15 @@ public class triangulador {
 	 * @param antena a1, a2, a3, a4
 	 */
 	public static punto triangula (antena a1, antena a2, antena a3, antena a4) {
-		double x, y, z; // punto a hallar 
-		double xtemp, ytemp, ztemp; // punto a hallar sin redondeos
+		double x, y, z; // punto a hallar
+		double xtemp, ytemp, ztemp; // punto a calcular para cáluclos temporales 
 		double v1, v2, v3; // vector de translacion
-		double x1, y1, z1, d1;
-		double x2, y2, z2, d2;
-		double x3, y3, z3, d3;
-		double x4, y4, z4, d4;
+		double x1, y1, z1, d1; // datos de a1
+		double x2, y2, z2, d2; // datos de a2
+		double x3, y3, z3, d3; // datos de a3
+		double x4, y4, z4, d4; // datos de a4
 		double b, a; //angulos de las rotaciones
-		double x2temp,z2temp,x3temp,z3temp;
+		double x2temp, y2temp, z2temp, x3temp, y3temp, z3temp; // coordenasdas temporales en la rotacion
 		//boolean xiguales,yiguales,ziguales;
 	
 		// obtencion las coordenadas del centro y el radio de las esferas
@@ -136,43 +136,48 @@ public class triangulador {
 		
 		//El punto 1 sigue siendo el origen, no lo tenemos que redondear.
 		//La coordenada y del punto 2 la hacemos 0, tampoco hay que redondearla.
-		x2 =  Math.round( x2 );
+		/*x2 =  Math.round( x2 );
 		z2 =  Math.round( z2 );
 		x3 =  Math.round( x3 );
-		z3 =  Math.round( z3 );
+		z3 =  Math.round( z3 );*/
 		
-		punto p1 = new punto (x1, y1, z1);
+		/*punto p1 = new punto (x1, y1, z1);
 		p1.mostrar();
 		punto p2 = new punto (x2, y2, z2);
 		p2.mostrar();
 		punto p3 = new punto (x3, y3, z3);
-		p3.mostrar();
+		p3.mostrar();*/
 		
 		
-		// calculo del primer angulo de rotacion
-		/*a = Math.atan( y2 / Math.sqrt( ( x2 * x2 ) + ( z2 * z2 ) ) );
+		// calculo del segundo angulo de rotacion
+		a = Math.atan( y2 / Math.sqrt( ( x2 * x2 ) + ( z2 * z2 ) ) );
 		System.out.print("A: ");
-		System.out.println(Math.toDegrees(a));*/
+		System.out.println(Math.toDegrees(a));
 		
 		// rotamos para alinear en el plano XY
-		/*x1 = ( x1 * Math.cos(a) ) + ( y1 * Math.sin(a) );
-		y1 = ( (-x1) * Math.sin(a) ) + ( y1 * Math.cos(a) );
-		x2 = ( x2 * Math.cos(a) ) + ( y2 * Math.sin(a) );
-		y2 = ( (-x2) * Math.sin(a) ) + ( y2 * Math.cos(a) );
-		x3 = ( x3 * Math.cos(a) ) + ( y3 * Math.sin(a) );
-		y3 = ( (-x3) * Math.sin(a) ) + ( y3 * Math.cos(a) );
-		x4 = ( x4 * Math.cos(a) ) + ( y4 * Math.sin(a) );
-		y4 = ( (-x4) * Math.sin(a) ) + ( y4 * Math.cos(a) );*/
+		x2temp = ( x2 * Math.cos(a) ) + ( y2 * Math.sin(a) );
+		y2temp = ( (-x2) * Math.sin(a) ) + ( y2 * Math.cos(a) );
+		x3temp = ( x3 * Math.cos(a) ) + ( y3 * Math.sin(a) );
+		y3temp = ( (-x3) * Math.sin(a) ) + ( y3 * Math.cos(a) );
+		
+		x2 = x2temp;
+		y2 = y2temp;
+		x3 = x3temp;
+		y3 = y3temp;
 		
 		// resolucion analitica
 		xtemp = ( ( d2 * d2 ) - ( d1 * d1 ) - ( x2 * x2 ) ) / ( -2 * x2 );
-		x = Math.round( xtemp ); 
+		x = xtemp;
 		ytemp = ( ( d3 * d3 ) - ( d2 * d2 ) - ( x3 * x3 ) + ( x2 * x2 ) + ( 2 * xtemp * x3 ) - ( 2 * xtemp * x2 ) - ( y3 * y3 ) ) /  ( -2 * y3 );
-		y = Math.round( ytemp );
+		y = ytemp;
 		ztemp = Math.sqrt( ( d1 * d1 ) - ( xtemp * xtemp ) - ( ytemp * ytemp ) ) ;
-		System.out.print("Z: ");
-		System.out.println(ztemp);
-		z =  Math.round( ztemp );
+		z =  ztemp;
+		
+		//dehacer la segunda rotacion: girar en sentido contrario (-a)
+		xtemp = ( x * Math.cos(-a) ) + ( y * Math.sin(-a) );
+		ytemp = ( (-x) * Math.sin(-a) ) + ( y * Math.cos(-a) );
+		x = xtemp;
+		y = ytemp;
 		
 		//dehacer la primera rotacion: girar en sentido contrario (-b)
 		xtemp = ( x * Math.cos(-b) ) + ( z * Math.sin(-b) );
@@ -185,6 +190,12 @@ public class triangulador {
 		y = ytemp + v2;
 		z = ztemp + v3;
 		
+		//redondeos
+		x = Math.round( xtemp );
+		y = Math.round( ytemp );
+		z = Math.round( ztemp );
+		
+		
 		System.out.println("Resultados");
 		System.out.print("X: ");
 		System.out.println(x);
@@ -192,6 +203,7 @@ public class triangulador {
 		System.out.println(y);
 		System.out.print("Z: ");
 		System.out.println(z);
+		
 		//comprobamos que es correcto en la cuarta antena
 		if ( ( ( ( x4 - x ) * ( x4 - x) ) + ( ( y4 - y ) * ( y4 - y ) ) + ( ( z4 - z ) * ( z4 - z ) ) ) == ( d4 * d4 ) ){
 			System.out.println("Esta bien");
