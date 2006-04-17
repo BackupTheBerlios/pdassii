@@ -42,10 +42,9 @@ public class triangulador {
 		double x3, y3, z3, d3;
 		double x4, y4, z4, d4;
 		double b, a; //angulos de las rotaciones
-		
-		//si dos de las coodenadas son iguales en todos se resuelve de otra forma: pedir antena  
-		//si una de las coordenadas es igual en todos se resuelve de otra forma: simplificar
-		
+		double x2temp,z2temp,x3temp,z3temp;
+		//boolean xiguales,yiguales,ziguales;
+	
 		// obtencion las coordenadas del centro y el radio de las esferas
 		x1 = a1.getX();
 		y1 = a1.getY();
@@ -63,6 +62,35 @@ public class triangulador {
 		y4 = a4.getY();
 		z4 = a4.getZ();
 		d4 = a4.getD();
+		
+		//si dos de las coodenadas son iguales en todos se resuelve de otra forma: pedir antena  
+		//si una de las coordenadas es igual en todos se resuelve de otra forma: simplificar
+		
+		/*if ( ( x1 == x2) || ( x1 == x3 ) || ( x2 == x3 ) ){
+			xiguales = true;
+		}
+		else{
+			xiguales = false;
+		}
+		
+		if ( ( y1 == y2) || ( y1 == y3 ) || ( y2 == y3 ) ){
+			yiguales = true;
+		}
+		else{
+			yiguales = false;
+		}
+		
+		if ( ( z1 == z2) || ( z1 == z3 ) || ( z2 == z3 ) ){
+			ziguales = true;
+		}
+		else{
+			ziguales = false;
+		}
+		
+		if ( ( xiguales && yiguales ) || ( xiguales && ziguales ) || ( yiguales && ziguales ) ){
+			int c = pidePlanta();
+			z= c;
+		}*/
 		
 		// calculo del vector de translacion
 		v1 = x1;
@@ -90,24 +118,35 @@ public class triangulador {
 		
 		// calculo del primer angulo de rotacion
 		b = Math.acos( x2 / Math.sqrt( ( x2 * x2 ) + ( z2 * z2 ) ) );
-		System.out.print("B: ");
-		System.out.println(Math.toDegrees(b));
+		//System.out.print("B: ");
+		//System.out.println(Math.toDegrees(b));
 
 		// rotamos para alinear en el plano XZ
-		x1 = ( x1 * Math.cos(b) ) + ( z1 * Math.sin(b) );
-		z1 = ( (-x1) * Math.sin(b) ) + ( z1 * Math.cos(b) );
-		x2 = ( x2 * Math.cos(b) ) + ( z2 * Math.sin(b) );
-		z2 = ( (-x2) * Math.sin(b) ) + ( z2 * Math.cos(b) );
-		x3 = ( x3 * Math.cos(b) ) + ( z3 * Math.sin(b) );
-		z3 = ( (-x3) * Math.sin(b) ) + ( z3 * Math.cos(b) );
+		//x1 = ( x1 * Math.cos(-b) ) + ( z1 * Math.sin(-b) );
+		//z1 = ( (-x1) * Math.sin(-b) ) + ( z1 * Math.cos(-b) );
+		x2temp = ( x2 * Math.cos(b) ) + ( z2 * Math.sin(b) );
+		z2temp = ( (-x2) * Math.sin(b) ) + ( z2 * Math.cos(b) );
+		x3temp = ( x3 * Math.cos(b) ) + ( z3 * Math.sin(b) );
+		z3temp = ( (-x3) * Math.sin(b) ) + ( z3 * Math.cos(b) );
+		
+		x2 = x2temp;
+		z2 = z2temp;
+		x3 = x3temp;
+		z3 = z3temp;
 		
 		//El punto 1 sigue siendo el origen, no lo tenemos que redondear.
 		//La coordenada y del punto 2 la hacemos 0, tampoco hay que redondearla.
 		x2 =  Math.round( x2 );
 		z2 =  Math.round( z2 );
 		x3 =  Math.round( x3 );
-		y3 =  Math.round( y3 );
 		z3 =  Math.round( z3 );
+		
+		punto p1 = new punto (x1, y1, z1);
+		p1.mostrar();
+		punto p2 = new punto (x2, y2, z2);
+		p2.mostrar();
+		punto p3 = new punto (x3, y3, z3);
+		p3.mostrar();
 		
 		
 		// calculo del primer angulo de rotacion
@@ -135,7 +174,11 @@ public class triangulador {
 		System.out.println(ztemp);
 		z =  Math.round( ztemp );
 		
-		//dehacer la rotacion: girar en sentido contrario
+		//dehacer la primera rotacion: girar en sentido contrario (-b)
+		xtemp = ( x * Math.cos(-b) ) + ( z * Math.sin(-b) );
+		ztemp = ( (-x) * Math.sin(-b) ) + ( z * Math.cos(-b) );
+		x = xtemp;
+		z = ztemp;
 		
 		//reinstauracion de los ejes
 		x = x + v1;
