@@ -4,8 +4,8 @@ public class PruebaTriangulacion {
 	public static void main(String[] args) {
 		
 		antena a1 = new antena(0,0,1,1);
-		antena a2 = new antena(0,0,2,1.4);
-		antena a3 = new antena(3,1,3,4.24);
+		antena a2 = new antena(0,1,0,1);
+		antena a3 = new antena(0,0,1,1);
 		antena a4 = new antena(0,0,0,0);
 		
 		/*antena a1 = new antena(25,10,10,18.027756377);
