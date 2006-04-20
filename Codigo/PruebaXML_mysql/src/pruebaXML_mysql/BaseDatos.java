@@ -86,8 +86,8 @@ public class BaseDatos{
 
 	    }
 
-	    System.out.println(" String a codificar :"+clave+":");
-	    System.out.println(" Codificacion:"+sb.toString()+":"+cod.length);
+	    //System.out.println(" String a codificar :"+clave+":");
+	    //System.out.println(" Codificacion:"+sb.toString()+":"+cod.length);
 	    return sb.toString();      
 		
 	} catch (NoSuchAlgorithmException e) {
@@ -95,7 +95,7 @@ public class BaseDatos{
 	    System.out.println("Error codificando la clave: "+e.getMessage());
 	    return null;
 	}
-	
+	//return clave;
     }
     private Connection abrirConexion() throws ClassNotFoundException
 					      ,InstantiationException
@@ -116,7 +116,7 @@ public class BaseDatos{
 	  /*
 	  varchar(80) pq la codificacion me da 20 digitos hexadecimales, cada uno como maximo da 4 caracteres
 	  */
-	  stmt.executeUpdate("CREATE TABLE "+nombreTabla+"(USUARIO VARCHAR(32) NOT NULL, CLAVE VARCHAR(80), PRIMARY KEY (USUARIO))");
+	  stmt.executeUpdate("CREATE TABLE "+nombreTabla+"(USUARIO VARCHAR(32) NOT NULL, CLAVE VARCHAR(41), PRIMARY KEY (USUARIO))");
 	  stmt.close();
 	  con.close();
 	  
@@ -164,7 +164,8 @@ public class BaseDatos{
 	  Connection con = abrirConexion();
 	  Statement stmt = con.createStatement();
 	  //String claveCodif = codificaClave(clave);
-	  stmt.executeUpdate("UPDATE "+nombreTabla+" SET CLAVE=\'"+codificaClave(clave)+"\' WHERE USUARIO=\'"+usuario+"\'");
+	  //stmt.executeUpdate("UPDATE "+nombreTabla+" SET CLAVE=\'"+codificaClave(clave)+"\' WHERE USUARIO=\'"+usuario+"\'");
+	  stmt.executeUpdate("UPDATE "+nombreTabla+" SET CLAVE=PASSWORD(\'"+clave+"\') WHERE USUARIO=\'"+usuario+"\'");
 	  stmt.close();
 	  con.close();
 	  
@@ -322,6 +323,32 @@ public class BaseDatos{
         }	
 	
       return retorno;
+    }
+    
+    public String login(String nombreTabla, String nombreUsuario, String clave) throws ConsultaTablaException
+    {
+	String retorno = "";
+	try {
+	  Connection con = abrirConexion();
+	  Statement stmt = con.createStatement();
+	  ResultSet resultado = stmt.executeQuery("SELECT CLAVE FROM "+nombreTabla+" WHERE USUARIO = \'"+nombreUsuario+"\'");
+	  int numCol = resultado.findColumn("CLAVE");
+	  //como el nombre de usuario es clave primaria se que solo me devolvera un valor
+	  resultado.next();
+	  retorno = resultado.getString(numCol);
+	    
+	  resultado.close();
+	  stmt.close();
+	  con.close();
+	  
+	  if(retorno.equals(codificaClave(clave))) return "si";
+	  else return "no";
+	  
+     } catch(Exception e) {
+	    //e.printStackTrace();
+	     throw new ConsultaTablaException("Hubo un error consultando la tabla: "+e.getMessage());
+	    
+      }	
     }
     
     private static void muestraMenuConsultas(){
