@@ -65,5 +65,30 @@ public class punto {
 			System.out.print(this.z);
 			System.out.println(" )");
 		}
+		
+		public boolean alineado(punto p){
+			int a = 0;
+			boolean b;
+			if ( this.x == p.getX() ){
+				a = a +1; 
+			}
+			
+			if ( this.y == p.getY() ){
+				a = a +1; 
+			}
+			
+			if ( this.z == p.getZ() ){
+				a = a +1; 
+			}
+			
+			if ( a > 1 ){
+				b = true;
+			}
+			else{
+				b = false;
+			}
+			
+			return b;
+		}
 
 }

@@ -41,8 +41,9 @@ public class triangulador {
 		double x2, y2, z2, d2; // datos de a2
 		double x3, y3, z3, d3; // datos de a3
 		double x4, y4, z4, d4; // datos de a4
-		double b, a, d; //angulos de las rotaciones
+		double b, a, d; // angulos de las rotaciones
 		double x2temp, y2temp, z2temp, x3temp, y3temp, z3temp; // coordenadas temporales en la rotacion
+		double aux; // para intercambiar posiciones
 	
 		// obtencion las coordenadas del centro y el radio de las esferas
 		x1 = a1.getX();
@@ -62,6 +63,29 @@ public class triangulador {
 		z4 = a4.getZ();
 		d4 = a4.getD();
 		
+		// comprobacion de que no estan alineadas: intercambiar la tercera y la cuarta;
+		punto p1 = new punto (x1, y1, z1);
+		punto p2 = new punto (x2, y2, z2);
+		punto p3 = new punto (x3, y3, z3);
+
+		if ( p1.alineado(p2) && p1.alineado(p3) ) {
+			aux = x3;
+			x3 = x4;
+			x4 = aux;
+			
+			aux = y3;
+			y3 = y4;
+			y4 = aux;
+			
+			aux = z3;
+			z3 = z4;
+			z4 = aux;
+			
+			aux = d3;
+			d3 = d4;
+			d4 = aux;
+		}
+		
 		// calculo del vector de translacion
 		v1 = x1;
 		v2 = y1;
@@ -80,15 +104,23 @@ public class triangulador {
 		
 		// mostramos los puntos (quitar luego)
 		System.out.println("Translacion:");
-		punto p1 = new punto (x1, y1, z1);
+		p1 = new punto (x1, y1, z1);
 		p1.mostrar();
-		punto p2 = new punto (x2, y2, z2);
+		p2 = new punto (x2, y2, z2);
 		p2.mostrar();
-		punto p3 = new punto (x3, y3, z3);
+		p3 = new punto (x3, y3, z3);
 		p3.mostrar();
 		
 		// calculo del primer angulo de rotacion: alinear B
-		b = Math.acos( x2 / Math.sqrt( ( x2 * x2 ) + ( z2 * z2 ) ) );
+		if ( ( x2 == 0 ) && ( z2 == 0 ) ){
+			b = 0;
+		}
+		else {
+			b = Math.acos( x2 / Math.sqrt( ( x2 * x2 ) + ( z2 * z2 ) ) );
+			if ( z2 < 0 ){
+				b = -b;
+			}
+		}
 		System.out.print("B: ");
 		System.out.println(Math.toDegrees(b));
 
@@ -121,9 +153,18 @@ public class triangulador {
 		p3.mostrar();
 		
 		// calculo del segundo angulo de rotacion: alinear B
-		a = Math.atan( y2 / Math.sqrt( ( x2 * x2 ) + ( z2 * z2 ) ) );
+		if ( ( x2 == 0 ) && ( y2 == 0 ) ){
+			a = 0;
+		}
+		else {
+			a = Math.acos( x2 / Math.sqrt( ( x2 * x2 ) + ( y2 * y2 ) ) );
+			if ( y2 < 0 ){
+				a = -a;
+			}
+		}
 		System.out.print("A: ");
 		System.out.println(Math.toDegrees(a));
+		
 		
 		// rotamos para alinear B en el plano XY
 		// usamos temporales para no usar los valores actualizados a mitad del calculo
@@ -155,7 +196,15 @@ public class triangulador {
 		
 		
 		// calculo del primer angulo de rotacion: alinear C
-		d = Math.acos( y3 / Math.sqrt( ( y3 * y3 ) + ( z3 * z3 ) ) );
+		if ( ( y3 == 0 ) && ( z3 == 0 ) ){
+			d = 0;
+		}
+		else {
+			d = Math.acos( y3 / Math.sqrt( ( y3 * y3 ) + ( z3 * z3 ) ) );
+			if ( z3 < 0 ){
+				d = -d;
+			}
+		}
 		System.out.print("D: ");
 		System.out.println(Math.toDegrees(d));
 
@@ -181,39 +230,10 @@ public class triangulador {
 		p3 = new punto (x3, y3, z3);
 		p3.mostrar();
 		
-		/*
-		// calculo del segundo angulo de rotacion: alinear C
-		c = Math.atan( x3 / Math.sqrt( ( y3 * y3 ) + ( z3 * z3 ) ) );
-		System.out.print("C: ");
-		System.out.println(Math.toDegrees(c));
-		
-		// rotamos para alinear C en el plano YX
-		// usamos temporales para no usar los valores actualizados a mitad del calculo
-		y3temp = ( y3 * Math.cos(-c) ) + ( x3 * Math.sin(-c) );
-		x3temp = ( (-y3) * Math.sin(-c) ) + ( x3 * Math.cos(-c) );
-		
-		// actualizamos valores
-		x3 = x3temp;
-		y3 = y3temp;
-		
-		// redondeos para garantizar y3=0
-		x3 =  Math.round( x3 );
-		y3 =  Math.round( y3 );
-		
-		// mostramos los puntos (quitar luego)
-		System.out.println("Rotacion 2 de C");
-		p1 = new punto (x1, y1, z1);
-		p1.mostrar();
-		p2 = new punto (x2, y2, z2);
-		p2.mostrar();
-		p3 = new punto (x3, y3, z3);
-		p3.mostrar();
-		*/
-		
 		// resolucion analitica
-		x = ( ( d2 * d2 ) - ( d1 * d1 ) - ( x2 * x2 ) ) / ( -2 * x2 );
-		y = ( ( d3 * d3 ) - ( d2 * d2 ) - ( x3 * x3 ) + ( x2 * x2 ) + ( 2 * x * x3 ) - ( 2 * x * x2 ) - ( y3 * y3 ) ) /  ( -2 * y3 );
-		z = Math.sqrt( ( d1 * d1 ) - ( x * x ) - ( y * y ) ) ;
+			x = ( ( d2 * d2 ) - ( d1 * d1 ) - ( x2 * x2 ) ) / ( -2 * x2 );
+			y = ( ( d3 * d3 ) - ( d2 * d2 ) - ( x3 * x3 ) + ( x2 * x2 ) + ( 2 * x * x3 ) - ( 2 * x * x2 ) - ( y3 * y3 ) ) /  ( -2 * y3 );
+			z = Math.sqrt( ( d1 * d1 ) - ( x * x ) - ( y * y ) ) ;
 		
 		// dehacer la primera rotacion de C: girar en sentido contrario (-d)
 		ytemp = ( y * Math.cos(-d) ) + ( z * Math.sin(-d) );
@@ -234,9 +254,9 @@ public class triangulador {
 		z = ztemp;
 		
 		//reinstauracion de los ejes
-		x = x + v1;
-		y = ytemp + v2;
-		z = ztemp + v3;
+		xtemp = x + v1;
+		ytemp = y + v2;
+		ztemp = z + v3;
 		
 		// redondeos
 		x = Math.round( xtemp );
