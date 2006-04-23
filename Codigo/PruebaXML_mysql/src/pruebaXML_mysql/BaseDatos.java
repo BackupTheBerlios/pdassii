@@ -351,6 +351,11 @@ public class BaseDatos{
       }	
     }
     
+    public String consultaExpediente (String nombreP){
+    	String salida = "Estoy consultando el expediente de "+ nombreP;
+    	return salida;
+    }
+    
     private static void muestraMenuConsultas(){
 	String str = "";
 	
