@@ -20,7 +20,8 @@ public class pda extends MIDlet implements CommandListener{
 //	atributos
 	private Display display;
 	private Command salir = new Command("Salir",Command.EXIT,1);//boton esquina izquierda
-	private Command select = new Command("Select",Command.OK,1);//boton esquina derecha
+	private Command atras = new Command("Atrás",Command.EXIT,1);//boton esquina izquierda
+	private Command consultar = new Command("Consultar",Command.OK,1);//boton esquina derecha
 	private Command aceptar = new Command("Aceptar",Command.OK,1);//boton esquina derecha 
 	private TextBox campoUsuario; //campo de texto para introducir el nombre de usuario
 	private TextBox campoClave; //campo de texto para introducir la clave
@@ -32,7 +33,8 @@ public class pda extends MIDlet implements CommandListener{
 	private int estado = 0;
 	/*estado = 0 es pantalla de inicio
 	 * estado = 1 es pantalla de menu principal
-	 * estado = 2 es pantalla de imprimir//}
+	 * estado = 2 es pantalla de imprimir
+	 * estado = 3 es quiero consultar un expediente
 	//}
 	 * */
 	private String datoPaciente;
@@ -126,19 +128,16 @@ public class pda extends MIDlet implements CommandListener{
 			  }
 		}*/
 		if (c.equals(menu.SELECT_COMMAND) && estado ==1){
-			//List lmp = (List)display.getCurrent();
 			  // En función de la opción marcada llamamos al método
-			 switch(menu.getSelectedIndex()/*lmp.getSelectedIndex()*/) {
+			 switch(menu.getSelectedIndex()) {
 			  	case 0://imprimir
 			  		System.out.println("Quiero Imprimir");
 			  		menuImprimir();
 			  		break;
 			  	case 1 ://consultar expediente
 			  		System.out.println("quiero consultar un expediente");
-			  		//datoPaciente = solicitaDatos();
-			  		consultaBaseExpediente();
-			  		//System.out.println("vuelvo de solicitar los datos");
-			  		//consultaBaseImprimir();
+			  		estado = 3;
+			  		solicitaDatos();
 			  		break;
 			  	case 2 ://salir
 			  		System.out.println("quiero salir");
@@ -151,24 +150,12 @@ public class pda extends MIDlet implements CommandListener{
 			opcionImprimir = opcionesImprimir.getSelectedIndex();
 			switch(opcionImprimir) {
 		  	case 0://imprimir expediente
-		  		//opcionImprimir = -1;
 		  		System.out.println("Quiero Imprimir un expediente");
-		  		/*datoPaciente = */solicitaDatos();
-		  		//boolean b = consultaBaseImprimir();
-		  		/*if(b){
-		  			System.out.println("he vuelto a salvo");
-		  			menuPrincipal();
-		  		}
-		  		else{
-		  			System.out.println("he vuelto malito");
-		  			menuPrincipal();
-		  		}*/
+		  		solicitaDatos();
 		  		break;
 		  	case 1 ://imprimir ultimos analisis
 		  		System.out.println("quiero imprimir los ultimos analisis");
-		  		datoPaciente = solicitaDatos();
-		  		System.out.println(datoPaciente);
-		  		consultaBaseImprimir();
+		  		solicitaDatos();
 		  		break;
 		  }
 		}
@@ -177,25 +164,24 @@ public class pda extends MIDlet implements CommandListener{
 			this.destroyApp(true);
 			this.notifyDestroyed();
 		}
-		else if (c.equals(select)){
-			
-			enter = true;
+		else if (c.equals(consultar)){
+			//enter = true;
 			System.out.println("le he dado a select");
 			TextBox tb = (TextBox)display.getCurrent();
 			datoPaciente = tb.getString();
-			boolean b = consultaBaseImprimir();
-			if(b){
-	  			System.out.println("he vuelto a salvo");
-	  			menuPrincipal();
-	  		}
-	  		else{
-	  			System.out.println("he vuelto malito");
-	  			menuPrincipal();
-	  		}
+			switch(estado){
+				case 2: consultaBaseImprimir();
+					    break;
+				case 3: consultaBaseExpediente();
+			}
+			menuPrincipal();
 		}
 		else if(c.equals(aceptar)){
 			enter = true;
 			System.out.println("Estoy dando al boton de aceptar");
+		}
+		else if(c.equals(atras)){
+			menuPrincipal();
 		}
 	}
 	
@@ -283,7 +269,7 @@ public class pda extends MIDlet implements CommandListener{
 		opcionesImprimir = new List("Documento para imprimir", List.IMPLICIT);
 		opcionesImprimir.append("Expediente", null);
 		opcionesImprimir.append("Últimos análisis", null);
-		opcionesImprimir.addCommand(salir);
+		opcionesImprimir.addCommand(atras);
 		//opcionesImprimir.addCommand(select);
 		opcionesImprimir.setCommandListener((CommandListener)this);
 		//enter = false;
@@ -296,7 +282,7 @@ public class pda extends MIDlet implements CommandListener{
 String solicitaDatos(){
 	nombrePaciente = new TextBox("Introduzca el nombre del paciente:", "", 20, TextField.ANY);
 	nombrePaciente.addCommand(salir);
-	nombrePaciente.addCommand(select);
+	nombrePaciente.addCommand(consultar);
 	nombrePaciente.setCommandListener((CommandListener)this);
 	//escribir en display
 	//enter = false;
@@ -366,15 +352,20 @@ boolean consultaBaseImprimir(){
 
 void consultaBaseExpediente(){
 	
-	/*org.kxmlrpc.XmlRpcClient xrc = new org.kxmlrpc.XmlRpcClient("http://localhost:8080"); 
+	org.kxmlrpc.XmlRpcClient xrc = new org.kxmlrpc.XmlRpcClient("http://localhost:8080"); 
 	
 	Vector params = new Vector();
 	params.addElement(datoPaciente);
-    //params.addElement(new Integer(opcionImprimir));
     try{
-    	//Integer impresora = (Integer)xrc.execute("bd.consultaExpediente", params);
-    	
-    	menuPrincipal();
+    	String expediente = (String)xrc.execute("bd.consultaExpediente", params);
+    	Alert  alertaExpediente = new Alert("Consulta de expediente");
+        alertaExpediente.setType(AlertType.INFO);
+        alertaExpediente.setTitle("Expediente de "+ datoPaciente);
+        alertaExpediente.setString(expediente+" \n");
+        alertaExpediente.setTimeout(Alert.FOREVER);
+        display.setCurrent(alertaExpediente, menu);
+        System.out.println(expediente+" \n");
+    	return;
     } catch (Exception exception) {
         System.err.println("JavaClient: " + exception.getMessage());
         Alert aviso = new Alert("Error en la consulta del expediente");
@@ -382,26 +373,11 @@ void consultaBaseExpediente(){
         aviso.setTitle("ERROR");
         aviso.setString(exception.getMessage());
         aviso.setTimeout(Alert.FOREVER);
-        //aviso.setTimeout(600000000);
         display.setCurrent(aviso);
         menuPrincipal();
-    }*/
-	//datoPaciente = solicitaDatos();
-	nombrePaciente = new TextBox("Introduzca el nombre del paciente:", "", 20, TextField.ANY);
-	nombrePaciente.addCommand(salir);
-	nombrePaciente.addCommand(aceptar);
-	nombrePaciente.setCommandListener((CommandListener)this);
-	System.out.println("ahora tendria que ver algo por pantalla");
-	//escribir en display
-	//enter = false;
-	//while(!this.enter)
-		display.setCurrent(nombrePaciente);
-	System.out.println("ahora ya tengo el nombre del paciente");
-	//enter = false;
-	TextBox tb = (TextBox)display.getCurrent();
-	String datoPaciente = tb.getString();
-	System.out.println(datoPaciente);
-	menuPrincipal();
+    }
+	System.out.println("estoy en consultarBaseExpediente");
+	return;
 }
 
 }
