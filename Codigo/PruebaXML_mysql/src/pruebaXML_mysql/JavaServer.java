@@ -30,6 +30,18 @@ public class JavaServer {
      	 	6. informar al usuario
 
      	 */
+    	BaseDatos miBase = new BaseDatos("bdpersonal", "maria", "1829");
+    	switch(opcion){
+    		case 0: //imprimir un expediente
+    			String expediente = miBase.consultaExpediente(nombrePaciente);
+    			if(expediente != null)
+    				return new Integer(1);
+    			else
+    				return new Integer(2);
+    		case 1: //imprimir los ultimos analisis
+    			//String expediente = miBase.consultaAnalisis(nombrePaciente);
+    			break;
+    	}
     	return new Integer(1);
      	 
     }
