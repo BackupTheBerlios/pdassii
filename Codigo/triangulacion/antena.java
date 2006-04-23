@@ -1,4 +1,4 @@
-package triangulacion1;
+package triangulacion;
 
 /**
  * @author kat
