@@ -12,6 +12,7 @@ import java.io.*;
 import java.sql.*;
 import java.security.*;
 
+//Clases de las posibles excepciones que se pueden dar en la base de datos
 
 class CreaTablaException extends RuntimeException
 { /**
@@ -53,6 +54,9 @@ class ConsultaTablaException extends RuntimeException
 	public ConsultaTablaException() { super(); }
 	public ConsultaTablaException(String mensaje) { super(mensaje); }
 }
+
+//Clase que implementa la base de datos del hospital 
+
 public class BaseDatos{
 
     /*
@@ -66,12 +70,16 @@ public class BaseDatos{
     private String usuario = "maria";
     private String password = "1829";
 
+    
+    //Constructora
     public BaseDatos(String nBd, String usr, String pw){
 	nombreBaseDatos = nBd;
 	usuario = usr;
 	password = pw;
     }
-     
+    
+    
+    //Método para codificar claves. Para ello utiliza un algoritmo el Java "SHA-1"
     public static String codificaClave(String clave){
 	
 	try {	
@@ -97,6 +105,9 @@ public class BaseDatos{
 	}
 	//return clave;
     }
+    
+    //Métodos generales para la base de datos
+    
     private Connection abrirConexion() throws ClassNotFoundException
 					      ,InstantiationException
 					      ,IllegalAccessException
@@ -108,8 +119,24 @@ public class BaseDatos{
 	return con;      
     }
 
+    private void eliminarTabla(String nombreTabla){
+        try {
+  	  Connection con = abrirConexion();
+  	  Statement stmt = con.createStatement();
+  	  stmt.executeUpdate("DROP TABLE "+nombreTabla);
+  	  stmt.close();
+  	  con.close();
+  	  
+          } catch(Exception e) {
+  	    //e.printStackTrace();
+  	    throw new EliminaTablaException("Hubo un error eliminando la tabla: "+e.getMessage());
+  	    //System.out.println("Hubo un error eliminando la tabla");
+          }	
+      }
     
-    private void crearTablaClaves(String nombreTabla){
+//Tablas correspondientes a los médicos: tienen como entradas el nombre de usuario y la clave
+    
+    private void crearTablaMedicos(String nombreTabla){
       try {
 	  Connection con = abrirConexion();
 	  Statement stmt = con.createStatement();
@@ -127,74 +154,264 @@ public class BaseDatos{
         }	
     }
     
-    private void eliminarTablaClaves(String nombreTabla){
-      try {
-	  Connection con = abrirConexion();
-	  Statement stmt = con.createStatement();
-	  stmt.executeUpdate("DROP TABLE "+nombreTabla);
-	  stmt.close();
-	  con.close();
-	  
-        } catch(Exception e) {
-	    //e.printStackTrace();
-	    throw new EliminaTablaException("Hubo un error eliminando la tabla: "+e.getMessage());
-	    //System.out.println("Hubo un error eliminando la tabla");
+    private void eliminarValorTablaM(String nombreTabla, String usuario){
+        try {
+  	  Connection con = abrirConexion();
+  	  Statement stmt = con.createStatement();
+  	  stmt.executeUpdate("DELETE FROM "+nombreTabla+" WHERE USUARIO=\'"+usuario+"\'");
+  	  stmt.close();
+  	  con.close();
+  	  
+          } catch(Exception e) {
+  	    throw new EliminaValorTablaException("Hubo un error eliminando una entrada de la tabla: "+e.getMessage());
+          }	
+      }
+      
+   private void modificarValorTablaM(String nombreTabla, String usuario, String clave){
+        try {
+  	  Connection con = abrirConexion();
+  	  Statement stmt = con.createStatement();
+  	  stmt.executeUpdate("UPDATE "+nombreTabla+" SET CLAVE=PASSWORD(\'"+clave+"\') WHERE USUARIO=\'"+usuario+"\'");
+  	  stmt.close();
+  	  con.close();
+  	  
+          } catch(Exception e) {
+  	    //e.printStackTrace();
+  	     throw new ModificaValorTablaException("Hubo un error modificando una entrada de la tabla: "+e.getMessage());
+  	     //System.out.println("Hubo un error modificando una entrada de la tabla");
+          }	
+      }
+      
+      private void insertarValorTablaM(String nombreTabla, String usuario, String clave){
+        try {
+  	  Connection con = abrirConexion();
+  	  Statement stmt = con.createStatement();
+  	  stmt.executeUpdate("INSERT INTO "+nombreTabla+" VALUES(\'"+usuario+"\',\'"+codificaClave(clave)+"\')");
+  	  stmt.close();
+  	  con.close();
+  	  
+          } catch(Exception e) {
+  	    throw new InsertaValorTablaException("Hubo un error insertando una entrada en la tabla: "+e.getMessage());
+          }	
+      }
+
+      private String consultarTablaMedicos(String nombreTabla){
+  	String retorno="USUARIO\tCLAVE\n-----\t-----\n";
+        try {
+  	  Connection con = abrirConexion();
+  	  Statement stmt = con.createStatement();
+  	  ResultSet resultado = stmt.executeQuery("SELECT * FROM "+nombreTabla);
+  	  int numCols = resultado.getMetaData().getColumnCount();
+  	  while(resultado.next()) {
+  	      for (int col=1; col<=numCols; col++ ) {
+  		  retorno += resultado.getString(col)+"\t";
+  	      }
+  	      retorno+="\n";
+  	    };
+  	  
+  	  resultado.close();
+  	  stmt.close();
+  	  con.close();
+  	  
+          } catch(Exception e) {
+  	    //e.printStackTrace();
+  	     throw new ConsultaTablaException("Hubo un error consultando la tabla: "+e.getMessage());
+  	    
+          }	
+  	
+        return retorno;
+      }
+      
+      public String consultarClave(String nombreTabla, String nombreUsuario){
+    		String retorno="CLAVE\n-----\n";
+    		try {
+    		  Connection con = abrirConexion();
+    		  Statement stmt = con.createStatement();
+    		  ResultSet resultado = stmt.executeQuery("SELECT CLAVE FROM "+nombreTabla+" WHERE USUARIO = '"+nombreUsuario+"'");
+    		  int numCol = resultado.findColumn("CLAVE");
+    		  while(resultado.next()) {
+    		      retorno += resultado.getString(numCol);
+    		      retorno+="\n";
+    		    };
+    		  
+    		  resultado.close();
+    		  stmt.close();
+    		  con.close();
+    		  
+    	        } catch(Exception e) {
+    		    //e.printStackTrace();
+    		     throw new ConsultaTablaException("Hubo un error consultando la tabla: "+e.getMessage());
+    		    
+    	        }	
+    		
+    	      return retorno;
+    	    }  
+
+      private String consultarNombre(String nombreTabla, String clave){
+    		String retorno="USUARIO\n-----\n";
+    		try {
+    		  Connection con = abrirConexion();
+    		  Statement stmt = con.createStatement();
+    		  //String claveCodif = codificaClave(clave);
+    		  ResultSet resultado = stmt.executeQuery("SELECT USUARIO FROM "+nombreTabla+" WHERE CLAVE = \'"+codificaClave(clave)+"\'");
+    		  int numCol = resultado.findColumn("USUARIO");
+    		  while(resultado.next()) {
+    		      retorno += resultado.getString(numCol);
+    		      retorno+="\n";
+    		    };
+    		  
+    		  resultado.close();
+    		  stmt.close();
+    		  con.close();
+    		  
+    	        } catch(Exception e) {
+    		    //e.printStackTrace();
+    		     throw new ConsultaTablaException("Hubo un error consultando la tabla: "+e.getMessage());
+    		    
+    	        }	
+    		
+    	      return retorno;
+    	    }
+      
+      public String consultarClave2(String nombreTabla, String nombreUsuario) throws ConsultaTablaException
+      {
+  	String retorno = "";
+  	try {
+  	  Connection con = abrirConexion();
+  	  Statement stmt = con.createStatement();
+  	  ResultSet resultado = stmt.executeQuery("SELECT CLAVE FROM "+nombreTabla+" WHERE USUARIO = \'"+nombreUsuario+"\'");
+  	  int numCol = resultado.findColumn("CLAVE");
+  	  //como el nombre de usuario es clave primaria se que solo me devolvera un valor
+  	  resultado.next();
+  	  retorno = resultado.getString(numCol);
+  	    
+  	  resultado.close();
+  	  stmt.close();
+  	  con.close();
+  	  
+          } catch(Exception e) {
+  	    //e.printStackTrace();
+  	     throw new ConsultaTablaException("Hubo un error consultando la tabla: "+e.getMessage());
+  	    
+          }	
+  	
+        return retorno;
+      }
+      
+      public String login(String nombreTabla, String nombreUsuario, String clave) throws ConsultaTablaException
+      {
+  	String retorno = "";
+  	try {
+  	  Connection con = abrirConexion();
+  	  Statement stmt = con.createStatement();
+  	  ResultSet resultado = stmt.executeQuery("SELECT CLAVE FROM "+nombreTabla+" WHERE USUARIO = \'"+nombreUsuario+"\'");
+  	  int numCol = resultado.findColumn("CLAVE");
+  	  //como el nombre de usuario es clave primaria se que solo me devolvera un valor
+  	  resultado.next();
+  	  retorno = resultado.getString(numCol);
+  	    
+  	  resultado.close();
+  	  stmt.close();
+  	  con.close();
+  	  
+  	  if(retorno.equals(codificaClave(clave))) return "si";
+  	  else return "no";
+  	  
+       } catch(Exception e) {
+  	    //e.printStackTrace();
+  	     throw new ConsultaTablaException("Hubo un error consultando la tabla: "+e.getMessage());
+  	    
         }	
-    }
+      }
+      
+//Tablas correspondientes a los pacientes: tienen como entradas el nombre del paciente y las rutas donde se encuentran almacenados sus expedientes y
+//los ultimos analisis
     
-    private void eliminarValorTabla(String nombreTabla, String usuario){
+    private void crearTablaPacientes (String nombreTabla){
+        try {
+  	  Connection con = abrirConexion();
+  	  Statement stmt = con.createStatement();
+  	  /*
+  	  varchar(80) pq la codificacion me da 20 digitos hexadecimales, cada uno como maximo da 4 caracteres
+  	  */
+  	  stmt.executeUpdate("CREATE TABLE "+nombreTabla+"(USUARIO VARCHAR(32) NOT NULL, EXPEDIENTE VARCHAR(80), ULTIMOS_ANALISIS VARCHAR(80))");
+  	  stmt.close();
+  	  con.close();
+  	  
+          } catch(Exception e) {
+  	    throw new CreaTablaException("Hubo un error creando la tabla: "+e.getMessage());
+          }	
+      }
+    
+    private void eliminarExpedienteTablaP(String nombreTabla, String expediente){
       try {
 	  Connection con = abrirConexion();
 	  Statement stmt = con.createStatement();
-	  //String dest = "DELETE FROM "+nombreTabla+" WHERE USUARIO=\'"+usuario+"\'";
-	  //System.out.println(dest);
-	  stmt.executeUpdate("DELETE FROM "+nombreTabla+" WHERE USUARIO=\'"+usuario+"\'");
+	  stmt.executeUpdate("DELETE FROM "+nombreTabla+" WHERE EXPEDIENTE=\'"+expediente+"\'");
 	  stmt.close();
 	  con.close();
 	  
         } catch(Exception e) {
-	    //e.printStackTrace();
 	    throw new EliminaValorTablaException("Hubo un error eliminando una entrada de la tabla: "+e.getMessage());
-	    //System.out.println("Hubo un error eliminando una entrada de la tabla");
         }	
     }
     
-    private void modificarValorTabla(String nombreTabla, String usuario, String clave){
+    private void eliminarAnalisisTablaP(String nombreTabla, String analisis){
+        try {
+  	  Connection con = abrirConexion();
+  	  Statement stmt = con.createStatement();
+  	  stmt.executeUpdate("DELETE FROM "+nombreTabla+" WHERE ULTIMOS_ANALISIS=\'"+analisis+"\'");
+  	  stmt.close();
+  	  con.close();
+  	  
+          } catch(Exception e) {
+  	    throw new EliminaValorTablaException("Hubo un error eliminando una entrada de la tabla: "+e.getMessage());
+          }	
+      }
+    
+    private void modificarExpedienteTabla(String nombreTabla, String usuario, String expediente){
       try {
 	  Connection con = abrirConexion();
 	  Statement stmt = con.createStatement();
-	  //String claveCodif = codificaClave(clave);
-	  //stmt.executeUpdate("UPDATE "+nombreTabla+" SET CLAVE=\'"+codificaClave(clave)+"\' WHERE USUARIO=\'"+usuario+"\'");
-	  stmt.executeUpdate("UPDATE "+nombreTabla+" SET CLAVE=PASSWORD(\'"+clave+"\') WHERE USUARIO=\'"+usuario+"\'");
+	  stmt.executeUpdate("UPDATE "+nombreTabla+" SET EXPEDIENTE=(\'"+expediente+"\') WHERE USUARIO=\'"+usuario+"\'");
 	  stmt.close();
 	  con.close();
 	  
         } catch(Exception e) {
-	    //e.printStackTrace();
 	     throw new ModificaValorTablaException("Hubo un error modificando una entrada de la tabla: "+e.getMessage());
-	     //System.out.println("Hubo un error modificando una entrada de la tabla");
         }	
     }
     
-    private void insertarValorTabla(String nombreTabla, String usuario, String clave){
+    private void modificarAnalisisTabla(String nombreTabla, String usuario, String analisis){
+        try {
+  	  Connection con = abrirConexion();
+  	  Statement stmt = con.createStatement();
+  	  stmt.executeUpdate("UPDATE "+nombreTabla+" SET ANALISIS=(\'"+analisis+"\') WHERE USUARIO=\'"+usuario+"\'");
+  	  stmt.close();
+  	  con.close();
+  	  
+          } catch(Exception e) {
+  	    //e.printStackTrace();
+  	     throw new ModificaValorTablaException("Hubo un error modificando una entrada de la tabla: "+e.getMessage());
+  	     //System.out.println("Hubo un error modificando una entrada de la tabla");
+          }	
+      }
+    
+    private void insertarValoresTablaP(String nombreTabla, String usuario, String expediente, String analisis){
       try {
 	  Connection con = abrirConexion();
 	  Statement stmt = con.createStatement();
-	  //String claveCodif = codificaClave(clave);
-	  // System.out.println(claveCodif);
-	  stmt.executeUpdate("INSERT INTO "+nombreTabla+" VALUES(\'"+usuario+"\',\'"+codificaClave(clave)+"\')");
+	  stmt.executeUpdate("INSERT INTO "+nombreTabla+" VALUES(\'"+usuario+"\',\'"+expediente+"\', \'"+analisis+"\')");
 	  stmt.close();
 	  con.close();
 	  
         } catch(Exception e) {
 	    throw new InsertaValorTablaException("Hubo un error insertando una entrada en la tabla: "+e.getMessage());
-	    //e.printStackTrace();
-	    //System.out.println("Hubo un error insertando en la tabla "+nombreTabla);
         }	
     }
 
-    private String consultarTodaTabla(String nombreTabla){
-	String retorno="USUARIO\tCLAVE\n-----\t-----\n";
+    private String consultarTablaPacientes(String nombreTabla){
+	String retorno="USUARIO\tEXPEDIENTE\tULTIMOS_ANALISIS\n-----\t-----\n";
       try {
 	  Connection con = abrirConexion();
 	  Statement stmt = con.createStatement();
@@ -220,61 +437,9 @@ public class BaseDatos{
       return retorno;
     }
     
-    public String consultarClave(String nombreTabla, String nombreUsuario){
-	String retorno="CLAVE\n-----\n";
-	try {
-	  Connection con = abrirConexion();
-	  Statement stmt = con.createStatement();
-	  ResultSet resultado = stmt.executeQuery("SELECT CLAVE FROM "+nombreTabla+" WHERE USUARIO = '"+nombreUsuario+"'");
-	  int numCol = resultado.findColumn("CLAVE");
-	  while(resultado.next()) {
-	      retorno += resultado.getString(numCol);
-	      retorno+="\n";
-	    };
-	  
-	  resultado.close();
-	  stmt.close();
-	  con.close();
-	  
-        } catch(Exception e) {
-	    //e.printStackTrace();
-	     throw new ConsultaTablaException("Hubo un error consultando la tabla: "+e.getMessage());
-	    
-        }	
-	
-      return retorno;
-    }
-    
-    
-      private String consultarNombre(String nombreTabla, String clave){
-	String retorno="USUARIO\n-----\n";
-	try {
-	  Connection con = abrirConexion();
-	  Statement stmt = con.createStatement();
-	  //String claveCodif = codificaClave(clave);
-	  ResultSet resultado = stmt.executeQuery("SELECT USUARIO FROM "+nombreTabla+" WHERE CLAVE = \'"+codificaClave(clave)+"\'");
-	  int numCol = resultado.findColumn("USUARIO");
-	  while(resultado.next()) {
-	      retorno += resultado.getString(numCol);
-	      retorno+="\n";
-	    };
-	  
-	  resultado.close();
-	  stmt.close();
-	  con.close();
-	  
-        } catch(Exception e) {
-	    //e.printStackTrace();
-	     throw new ConsultaTablaException("Hubo un error consultando la tabla: "+e.getMessage());
-	    
-        }	
-	
-      return retorno;
-    }
-
-    
-      private String consultarTablaAlfabetico(String nombreTabla, String nombreUsuario){
-	String retorno="USUARIO\tCLAVE\n-----\t-----\n";
+  
+    private String consultarTablaAlfabetico(String nombreTabla, String nombreUsuario){
+      String retorno="USUARIO\tCLAVE\n-----\t-----\n";
       try {
 	  Connection con = abrirConexion();
 	  Statement stmt = con.createStatement();
@@ -300,63 +465,64 @@ public class BaseDatos{
       return retorno;
     }    
     
-    public String consultarClave2(String nombreTabla, String nombreUsuario) throws ConsultaTablaException
-    {
-	String retorno = "";
-	try {
-	  Connection con = abrirConexion();
-	  Statement stmt = con.createStatement();
-	  ResultSet resultado = stmt.executeQuery("SELECT CLAVE FROM "+nombreTabla+" WHERE USUARIO = \'"+nombreUsuario+"\'");
-	  int numCol = resultado.findColumn("CLAVE");
-	  //como el nombre de usuario es clave primaria se que solo me devolvera un valor
-	  resultado.next();
-	  retorno = resultado.getString(numCol);
-	    
-	  resultado.close();
-	  stmt.close();
-	  con.close();
-	  
-        } catch(Exception e) {
-	    //e.printStackTrace();
-	     throw new ConsultaTablaException("Hubo un error consultando la tabla: "+e.getMessage());
-	    
-        }	
-	
-      return retorno;
+    
+    
+    public String consultaExpediente (String nombreTabla, String nombreP){
+    	/*String salida = "Estoy consultando el expediente de "+ nombreP;
+    	return salida;*/
+    	String retorno="";
+		try {
+		  Connection con = abrirConexion();
+		  Statement stmt = con.createStatement();
+		  ResultSet resultado = stmt.executeQuery("SELECT EXPEDIENTE FROM "+nombreTabla+" WHERE USUARIO = '"+nombreP+"'");
+		  int numCol = resultado.findColumn("EXPEDIENTE");
+		  while(resultado.next()) {
+		      retorno += resultado.getString(numCol);
+		      retorno+="\n";
+		    };
+		  
+		  resultado.close();
+		  stmt.close();
+		  con.close();
+		  
+	        } catch(Exception e) {
+		    //e.printStackTrace();
+		     throw new ConsultaTablaException("Hubo un error consultando la tabla: "+e.getMessage());
+		    
+	        }	
+		
+	      return retorno;
     }
     
-    public String login(String nombreTabla, String nombreUsuario, String clave) throws ConsultaTablaException
-    {
-	String retorno = "";
-	try {
-	  Connection con = abrirConexion();
-	  Statement stmt = con.createStatement();
-	  ResultSet resultado = stmt.executeQuery("SELECT CLAVE FROM "+nombreTabla+" WHERE USUARIO = \'"+nombreUsuario+"\'");
-	  int numCol = resultado.findColumn("CLAVE");
-	  //como el nombre de usuario es clave primaria se que solo me devolvera un valor
-	  resultado.next();
-	  retorno = resultado.getString(numCol);
-	    
-	  resultado.close();
-	  stmt.close();
-	  con.close();
-	  
-	  if(retorno.equals(codificaClave(clave))) return "si";
-	  else return "no";
-	  
-     } catch(Exception e) {
-	    //e.printStackTrace();
-	     throw new ConsultaTablaException("Hubo un error consultando la tabla: "+e.getMessage());
-	    
-      }	
+    public String consultaAnalisis (String nombreTabla, String nombreP){
+    	String retorno="";
+		try {
+		  Connection con = abrirConexion();
+		  Statement stmt = con.createStatement();
+		  ResultSet resultado = stmt.executeQuery("SELECT ULTIMOS_ANALISIS FROM "+nombreTabla+" WHERE USUARIO = '"+nombreP+"'");
+		  int numCol = resultado.findColumn("ULTIMOS_ANALISIS");
+		  while(resultado.next()) {
+		      retorno += resultado.getString(numCol);
+		      retorno+="\n";
+		    };
+		  
+		  resultado.close();
+		  stmt.close();
+		  con.close();
+		  
+	        } catch(Exception e) {
+		    //e.printStackTrace();
+		     throw new ConsultaTablaException("Hubo un error consultando la tabla: "+e.getMessage());
+		    
+	        }	
+		
+	      return retorno;
     }
     
-    public String consultaExpediente (String nombreP){
-    	String salida = "Estoy consultando el expediente de "+ nombreP;
-    	return salida;
-    }
     
-    private static void muestraMenuConsultas(){
+    //Procedimientos para la interacción con el usuario
+    
+    private static void muestraMenuConsultasM(){
 	String str = "";
 	
 	str+="\tConsultas disponibles\n";
@@ -368,7 +534,17 @@ public class BaseDatos{
 	System.out.println(str);
     }
     
-    private static int MenuConsultas(){
+    private static void muestraMenuConsultasP(){
+    	String str = "";
+    	
+    	str+="\tConsultas disponibles\n";
+    	str+="\t\t1. Mostrar el contenido de toda una tabla\n";
+    	str+="\t\t2. Buscar el expediente de un paciente\n";
+    	str+="\t\t3. Buscar los analisis de un paciente\n";
+    	System.out.println(str);
+        }
+    
+    private static int MenuConsultasM(){
 	//leer opciones del menu
 	boolean ok = false;
 	int retorno=0;
@@ -376,7 +552,7 @@ public class BaseDatos{
 	String msjError = "Las opciones van de 1 a 4";
 	
 	while (!ok) {
-	    muestraMenuConsultas();  
+	    muestraMenuConsultasM();  
 	    retorno = leerEntero(msjPedida);
 	    ok = (retorno >= 1) && (retorno<=5);
 	    if (!ok) {
@@ -387,12 +563,30 @@ public class BaseDatos{
 	return retorno;
     }
     
-        
-    private static void muestraMenuPrincipal(){
+    private static int MenuConsultasP(){
+    	//leer opciones del menu
+    	boolean ok = false;
+    	int retorno=0;
+    	String msjPedida = "\tElije una consulta";
+    	String msjError = "Las opciones van de 1 a 3";
+    	
+    	while (!ok) {
+    	    muestraMenuConsultasP();  
+    	    retorno = leerEntero(msjPedida);
+    	    ok = (retorno >= 1) && (retorno<=3);
+    	    if (!ok) {
+    		System.out.println(msjError);
+    	    }
+    	}
+           
+    	return retorno;
+        }
+    
+    private static void muestraMenu(){
 	String str = "";
 	
 	str +="Menu\n";
-	str +="\t0. Salir\n";
+	//str +="\t0. Salir\n";
 	str +="\t1. Crear una nueva tabla\n";
 	str +="\t2. Eliminar una tabla\n";
 	str +="\t3. Insertar una entrada en una tabla\n";
@@ -403,25 +597,26 @@ public class BaseDatos{
 	System.out.println(str);
     }
     
+    
      private static int Menu(){
-	//leer opciones del menu
-	boolean ok = false;
-	int retorno=0;
-	String msjPedida = "Elije una opción";
-	String msjError = "Las opciones van de 0 a 6";
-	
-	while (!ok) {
-	    muestraMenuPrincipal();  
-	    retorno = leerEntero(msjPedida);
-	    ok = (retorno >= 0) && (retorno<=6);
-	    if (!ok) {
+    	 //leer opciones del menu
+    	 boolean ok2 = false;
+    	 int retorno2=0;
+    	 String msjPedida = "Elije una opción";
+    	 String msjError = "Las opciones van de 1 a 6";
+    	 while (!ok2) {
+	    muestraMenu();  
+	    retorno2 = leerEntero(msjPedida);
+	    ok2 = (retorno2 >= 0) && (retorno2<=6);
+	    if (!ok2) {
 		System.out.println(msjError);
 	    }
 	}
        
-	return retorno;
+	return retorno2;
     }
     
+     
     private static String leerString(String s)
     {
     	BufferedReader teclado=new BufferedReader(new InputStreamReader(System.in));	
@@ -457,51 +652,69 @@ public class BaseDatos{
 	}while (error);
 	
 	return retorno;
-      
     }
+    
+	public static int eligeTabla(){
+		String mOp = "Elige:\n0. Salir.\n1. Tabla de médicos.\n2. Tabla de pacientes.\n";
+	    return leerEntero(mOp);
+    }
+	
+	public static int menuBorrarPacientes(){
+		String mOp = "Elige:\n1. Borrar expediente.\n2. Borrar ultimos analisis.\n";
+	    return leerEntero(mOp);
+	}
+	
+	public static int menuModificarPacientes(){
+		String mOp = "Elige:\n1. Modificar expediente.\n2. Modificar ultimos analisis.\n";
+	    return leerEntero(mOp);
+	}
+	
     public static void main(String [] args){
     	
 	//BaseDatos bd = new BaseDatos("baseClaves", "alumno", "alumno");
     BaseDatos bd = new BaseDatos("bdpersonal", "maria", "1829");
+    
+    int tipoTabla = eligeTabla();
 	
+    while (tipoTabla != 0){
+    if(tipoTabla == 1){
 	int opcion= Menu(); 
 	String tabla, usuario, clave= "",consulta;
-	
-	while (opcion!=0) {
+
 	    try {
 		
 		switch (opcion) {
 		case 0:
 		    break;
-		case 1: bd.crearTablaClaves(leerString("Introduce el nombre de la tabla a crear"));
-		        opcion=Menu();		
+		case 1: bd.crearTablaMedicos(leerString("Introduce el nombre de la tabla a crear"));
+		        opcion=eligeTabla();		
 			break;
-		case 2: bd.eliminarTablaClaves(leerString("Introduce el nombre de la tabla a eliminar"));
-		        opcion=Menu();
+		case 2: bd.eliminarTabla(leerString("Introduce el nombre de la tabla a eliminar"));
+		        opcion=eligeTabla();
 			break;
 		case 3: tabla = leerString("¿En que tabla?");
 	                usuario = leerString("¿Que usuario?");
 			clave = leerString("¿Que clave?");
-			bd.insertarValorTabla(tabla, usuario, clave);
-			opcion=Menu();
+			bd.insertarValorTablaM(tabla, usuario, clave);
+			opcion=eligeTabla();
 			break;
 		case 4: tabla = leerString("¿En que tabla?");
 	                usuario = leerString("¿Que usuario?");
-			bd.eliminarValorTabla(tabla, usuario);
-			opcion=Menu();
+			bd.eliminarValorTablaM(tabla, usuario);
+			opcion=eligeTabla();
 			break;
 		    
 		case 5: tabla = leerString("¿En que tabla?");
 		        usuario = leerString("¿Que usuario?");
 			clave = leerString("¿Que clave?");
-			bd.modificarValorTabla(tabla, usuario, clave);
-			opcion=Menu();
+			bd.modificarValorTablaM(tabla, usuario, clave);
+			opcion=eligeTabla();
 			break;
 		    
-		case 6: opcion = MenuConsultas();
+		case 6: opcion = MenuConsultasM();
 		        switch (opcion) {
 			case 1: tabla = leerString("¿En que tabla?");
-			        consulta = bd.consultarTodaTabla(tabla);
+			        consulta = bd.consultarTablaMedicos(tabla);
 				System.out.println("Resultado de la consulta:\n"+consulta);
 				break;
 			case 2: tabla = leerString("¿En que tabla?");
@@ -526,19 +739,102 @@ public class BaseDatos{
 			    break;
 			}
 			
-			opcion=Menu();
+			opcion=eligeTabla();
 			break;
-		default: opcion=Menu();
+		default: opcion=eligeTabla();
 		         break;
 		}
 	    }
 	     catch (Exception e) {
 		 System.out.println(e.getMessage());
-		 opcion=Menu();
+		 opcion=eligeTabla();
 	    }
 
 	    
-	}
-  }
-}
+	//}
+  //}
+    } else {
+    	int opcion= Menu(); 
+    	String tabla, usuario, expediente = "", analisis = "" ,consulta;
+    	
+    	    try {
+    		
+    		switch (opcion) {
+    		case 0:
+    		    break;
+    		case 1: bd.crearTablaPacientes(leerString("Introduce el nombre de la tabla a crear"));
+    		        opcion=eligeTabla();		
+    			break;
+    		case 2: bd.eliminarTabla(leerString("Introduce el nombre de la tabla a eliminar"));
+    		        opcion=eligeTabla();
+    			break;
+    		case 3: tabla = leerString("¿En que tabla?");
+    	            usuario = leerString("¿Que usuario?");
+    	            expediente = leerString("¿Que expediente?");
+    	            analisis = leerString("¿Que ultimos analisis?");
+    	            bd.insertarValoresTablaP(tabla, usuario, expediente, analisis);
+    	            opcion=eligeTabla();
+    	            break;
+    		case 4: int borrar = menuBorrarPacientes();
+    				tabla = leerString("¿En que tabla?");
+    				usuario = leerString("¿Que usuario?");
+    	            if (borrar == 1){
+    	            	expediente = leerString("¿Que expediente?");
+    	            	bd.eliminarExpedienteTablaP(tabla, expediente);
+    	            }
+    	            else{
+    	            	analisis = leerString("¿Que ultimos analisis?");
+    	            	bd.eliminarAnalisisTablaP(tabla, usuario);
+    	            }
+    	            opcion=eligeTabla();
+    	            break;   		    
+    		case 5: int modificar = menuModificarPacientes();
+    				tabla = leerString("¿En que tabla?");
+    				usuario = leerString("¿Que usuario?");
+    				if (modificar == 1){
+    					expediente = leerString("¿Que expediente?");
+    					bd.modificarExpedienteTabla(tabla, usuario, expediente);
+    				}
+    				else{
+    					analisis = leerString("¿Que ultimos analisis?");
+    					bd.modificarAnalisisTabla(tabla, usuario, analisis);
+    				}
+    				opcion=eligeTabla();
+    				break;    		    
+    		case 6: opcion = MenuConsultasP();
+    		        switch (opcion) {
+    			case 1: tabla = leerString("¿En que tabla?");
+    			        consulta = bd.consultarTablaPacientes(tabla);
+    			        System.out.println("Resultado de la consulta:\n"+consulta);
+    			        break;
+    			case 2: tabla = leerString("¿En que tabla?");
+    			        usuario = leerString("¿Que usuario?");
+    			        consulta = bd.consultaExpediente(tabla, usuario);
+    				System.out.println("Resultado de la consulta:\n"+consulta);
+    				break;
+    			case 3: tabla = leerString("¿En que tabla?");
+    					usuario = leerString("¿Que usuario?");
+    					consulta = bd.consultaAnalisis(tabla, usuario);
+    					System.out.println("Resultado de la consulta:\n"+consulta);
+    					break;
+    			default:
+    			    break;
+    			}
+    			
+    			opcion=eligeTabla();
+    			break;
+    		default: opcion=eligeTabla();
+    		         break;
+    		}
+    	    }
+    	     catch (Exception e) {
+    		 System.out.println(e.getMessage());
+    		 opcion=eligeTabla();
+    	    }
 
+    	    
+    	}
+      }
+    }
+//}
+}
