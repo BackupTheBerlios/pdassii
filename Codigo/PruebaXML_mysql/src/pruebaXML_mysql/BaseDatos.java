@@ -386,7 +386,7 @@ public class BaseDatos{
         try {
   	  Connection con = abrirConexion();
   	  Statement stmt = con.createStatement();
-  	  stmt.executeUpdate("UPDATE "+nombreTabla+" SET ANALISIS=(\'"+analisis+"\') WHERE USUARIO=\'"+usuario+"\'");
+  	  stmt.executeUpdate("UPDATE "+nombreTabla+" SET ULTIMOS_ANALISIS=(\'"+analisis+"\') WHERE USUARIO=\'"+usuario+"\'");
   	  stmt.close();
   	  con.close();
   	  
