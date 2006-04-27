@@ -3,7 +3,7 @@ package pruebaXML_mysql;
 
 import java.util.*; 
 import org.apache.xmlrpc.*;
-
+import java.io.*;
 
 public class JavaServer {
 	public JavaServer () {
@@ -19,6 +19,24 @@ public class JavaServer {
         return result;
     }*/
     
+	public String leer(String archivo){
+		String str;
+		String salida = "";
+		try{
+			File f = new File(archivo); 
+			BufferedReader in = new BufferedReader(new FileReader(f));
+			while((str = in.readLine())!= null)
+				salida += str+"\n";
+			System.out.println(salida);
+			in.close();
+			return salida;
+		}catch(IOException ioe){
+			System.err.println(ioe);
+			System.err.println("error en la lectura del dato");
+			return "";
+		}
+	}
+	
     public Integer imprimir(String nombrePaciente, int opcion){
      	/*
      	/*	0.buscar en la base de datos si esta el nombrePaciente
@@ -30,20 +48,59 @@ public class JavaServer {
      	 	6. informar al usuario
 
      	 */
+    	String info;//aqui guardo el resultado de la lectura del fichero que es lo que hay que mandar a imprimir
     	BaseDatos miBase = new BaseDatos("bdpersonal", "maria", "1829");
     	switch(opcion){
     		case 0: //imprimir un expediente
-    			String expediente = miBase.consultaExpediente(nombrePaciente);
-    			if(expediente != null)
-    				return new Integer(1);
-    			else
-    				return new Integer(2);
+    			try{
+    				String expediente = miBase.consultaExpediente("pruebaPaciente", nombrePaciente);
+    				int tam = expediente.length();
+    				expediente = expediente.substring(0, tam-1);
+    				if (expediente == "")
+    					return new Integer(-1);
+    				else{
+    					info = leer(expediente);
+    					if (info == null)
+    						return new Integer(-1);
+    				}
+    			}catch(Exception e){
+    				return new Integer(-1);
+    			}
+    			break;
     		case 1: //imprimir los ultimos analisis
-    			//String expediente = miBase.consultaAnalisis(nombrePaciente);
+    			try{
+    				String expediente = miBase.consultaAnalisis("pruebaPaciente", nombrePaciente);
+    				int tam = expediente.length();
+    				expediente = expediente.substring(0, tam-1);
+    				if (expediente == "")
+    					return new Integer(-1);
+    				else{
+    					info = leer(expediente);
+    					if (info == null)
+    						return new Integer(-1);
+    				}
+    			}catch(Exception e){
+    				return new Integer(-1);
+    			}
     			break;
     	}
     	return new Integer(1);
      	 
+    }
+    
+    public String consultaExpediente(String nombrePaciente){
+    	BaseDatos miBase = new BaseDatos("bdpersonal", "maria", "1829");
+    	try{
+			String expediente = miBase.consultaExpediente("pruebaPaciente", nombrePaciente);
+			int tam = expediente.length();
+			expediente = expediente.substring(0, tam-1);
+			if (expediente == "")
+				return expediente;
+			else
+				return leer(expediente);
+		}catch(Exception e){
+			return "";
+		}
     }
 
     public static void main (String [] args) {
