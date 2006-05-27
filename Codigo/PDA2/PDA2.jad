@@ -1,0 +1,6 @@
+MIDlet-Version: 1.0.0
+MIDlet-Jar-URL: PDA2.jar
+MIDlet-Vendor: Midlet Suite Vendor
+MicroEdition-Profile: MIDP-2.0
+MicroEdition-Configuration: CLDC-1.1
+MIDlet-Name: PDA2 Midlet Suite
