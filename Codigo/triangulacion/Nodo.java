@@ -1,9 +1,11 @@
-package primero;
+package triangulacion;
 
 public class Nodo 
 {
-	/** Coordenadas de la PDA */
-	private float x,y; 
+	/** Coordenadas del nodo */
+	private double x,y; 
+	/** Indica el ancho y largo del nodo */
+	private double largo,ancho;
 	/** Indica si tiene impresora el nodo actual */
 	private boolean tieneImpresora;	
 	/** Proporciona descpción del nodo */
@@ -13,28 +15,32 @@ public class Nodo
 	{		
 	}
 	
-	public Nodo( float a,float b,boolean bo,String desc)
+	public Nodo( double a,double b,boolean bo,String desc,double lar,double anch)
 	{
 		this.x = a;
 		this.y = b;
 		this.tieneImpresora = bo;		
 		this.descripcion = desc;
+		this.largo = lar;
+		this.ancho = anch;
 	}
 	
-	public Nodo( float a,float b,boolean bo)
+	public Nodo( double a,double b,boolean bo,double lar,double anc)
 	{
 		this.x = a;
 		this.y = b;
 		this.tieneImpresora = bo;		
 		this.descripcion = " ";
+		this.largo = lar;
+		this.ancho = anc;
 	}
 	
-	public float getX()
+	public double getX()
 	{
 		return this.x;
 	}
 
-	public float getY()
+	public double getY()
 	{
 		return this.y;		
 	}
@@ -47,6 +53,16 @@ public class Nodo
 	public String getDesc()
 	{
 		return this.descripcion;
+	}
+	
+	public double getAncho()
+	{
+		return this.ancho;
+	}
+	
+	public double getLargo()
+	{
+		return this.largo;
 	}
 	
 	public void setX(int a)
