@@ -1,6 +1,9 @@
-package primero;
+package triangulacion;
 
 import java.util.Vector;
+
+import primero.Nodo;
+import primero.punto;
 /** Varias cosas :
  * -> La matriz de adyacencias contiene los siguientes valores:
  * 	  [i][j] = 'Integer.MAX_VALUE' cuando no haya camino entre los nodos 'i' y 'j' 
@@ -121,14 +124,18 @@ public class Mapa
 		boolean [] usado = new boolean [this.getNumNodos()];
 		int num = this.correspondenciaNodo(nod);
 		int nodoDistanciaMin;
-		
-		do
+		if(nod.getTieneImp())
+			naux = (Nodo)this.mapNodos.elementAt(num);
+		else
 		{
-			nodoDistanciaMin = eligeMin(num,usado);
-			usado[nodoDistanciaMin] = true;
-			naux = (Nodo)this.mapNodos.elementAt(nodoDistanciaMin);
+			do
+			{
+				nodoDistanciaMin = eligeMin(num,usado);
+				usado[nodoDistanciaMin] = true;
+				naux = (Nodo)this.mapNodos.elementAt(nodoDistanciaMin);
+			}
+			while (!naux.getTieneImp());
 		}
-		while (!naux.getTieneImp());
 		return naux;
 	}
 	
@@ -172,12 +179,32 @@ public class Mapa
 		}
 		return num;
 	}
+	/**A partir de las coordenadas devueltas por el algoritmo de
+	*  triangulacion, la función devuelve el nodo donde se ubican
+	*  estas coordenadas
+	*/
+	public Nodo localizaPunto(punto pto)
+	{
+		Nodo retorno = null;
+		double x = pto.getX();
+		double y = pto.getY();
+		
+		for(int i = 0 ; i<this.getNumNodos(); i++ )
+		{
+			Nodo n = (Nodo)this.mapNodos.elementAt(i);
+			if((n.getX() < x) && (n.getX() + n.getLargo())>x)
+				if((n.getY() < y) && (n.getY() + n.getAncho())>y)
+					retorno = n;
+		}
+	return retorno;
+	}
 	
 	/**Busca el nodo más cercano que contenga impresora,
-	*  a partir del nodo dodne se encuentra la PDA
+	*  a partir del nodo donde se encuentra la PDA
 	*/	
-	public Nodo buscaNodoImpresora(Nodo nodo)
+	public Nodo buscaNodoImpresora(punto p)
 	{
+		Nodo nodo = this.localizaPunto(p);
 		Nodo n;
 		this.Floyd();
 		n = this.filtar(nodo);
