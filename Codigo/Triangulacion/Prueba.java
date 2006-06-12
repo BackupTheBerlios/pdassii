@@ -4,6 +4,7 @@ public class Prueba
 {
 	public static void main(String args[])
 	{
+		// Lo primero que debemos hacer es una lista de todos los nodos
 		Nodo nod0 = new Nodo(0,0,false,"0",5,10);
 		Nodo nod1 = new Nodo(0,5,false,"1",5,10);
 		Nodo nod2 = new Nodo(0,10,false,"2",5,10);
@@ -16,9 +17,11 @@ public class Prueba
 		Nodo nod9 = new Nodo(30,0,false,"9",5,10);
 		Nodo nod10 = new Nodo(40,5,false,"10",5,10);
 		Nodo nod11 = new Nodo(30,10,true,"11",5,10);
-				
+		
+		// Luego creamos el mapa
 		Mapa map = new Mapa(7,12);
 		
+		// A continuacion añadimos los nodos EN ORDEN al mapa
 		map.añadeNodo(nod0);
 		map.añadeNodo(nod1);
 		map.añadeNodo(nod2);
@@ -32,6 +35,7 @@ public class Prueba
 		map.añadeNodo(nod10);
 		map.añadeNodo(nod11);
 		
+		// Acto seguido añadimos las distancias de un nodo al otro
 		map.añadeDistancia(0,1,3);
 		map.añadeDistancia(1,2,3);
 		map.añadeDistancia(1,4,8);
@@ -44,8 +48,8 @@ public class Prueba
 		map.añadeDistancia(9,10,3);
 		map.añadeDistancia(10,11,3);
 	
-		punto p = new punto(2,11,0);
-		Nodo n = map.buscaNodoImpresora(p);
+		punto p = new punto(2,11,0);// aqui debemos poner el punto devuelto por el algoritmo de triangulacion
+		Nodo n = map.buscaNodoImpresora(p); // LLamada a la funcion mas importante.Esta realiza la localizacion
 		System.out.println("Debes acudir al nodo " + n.getDesc()+ " para recoger el impreso. ");
 	}
 }
