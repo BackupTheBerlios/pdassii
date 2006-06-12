@@ -2,39 +2,45 @@ package Triangulacion;
 
 public class Nodo 
 {
-	/** Coordenadas de la PDA */
-	private float x,y; 
+	/** Coordenadas del nodo */
+	private double x,y; 
+	/** Indica el ancho y largo del nodo */
+	private double largo,ancho;
 	/** Indica si tiene impresora el nodo actual */
 	private boolean tieneImpresora;	
-	/** Proporciona descpcin del nodo */
+	/** Proporciona descpción del nodo */
 	private String descripcion;
 	
 	public Nodo()
 	{		
 	}
 	
-	public Nodo( float x,float y,boolean bo,String desc)
+	public Nodo( double a,double b,boolean bo,String desc,double lar,double anch)
 	{
-		this.x = x;
-		this.y = y;
+		this.x = a;
+		this.y = b;
 		this.tieneImpresora = bo;		
 		this.descripcion = desc;
+		this.largo = lar;
+		this.ancho = anch;
 	}
 	
-	public Nodo( float x,float y,boolean bo)
+	public Nodo( double a,double b,boolean bo,double lar,double anc)
 	{
-		this.x = x;
-		this.y = y;
+		this.x = a;
+		this.y = b;
 		this.tieneImpresora = bo;		
 		this.descripcion = " ";
+		this.largo = lar;
+		this.ancho = anc;
 	}
 	
-	public float getX()
+	public double getX()
 	{
 		return this.x;
 	}
 
-	public float getY()
+	public double getY()
 	{
 		return this.y;		
 	}
@@ -49,14 +55,24 @@ public class Nodo
 		return this.descripcion;
 	}
 	
-	public void setX(int x)
+	public double getAncho()
 	{
-		this.x = x;		
+		return this.ancho;
 	}
 	
-	public void setY(int y)
+	public double getLargo()
 	{
-		this.y = y;
+		return this.largo;
+	}
+	
+	public void setX(int a)
+	{
+		this.x = a;		
+	}
+	
+	public void setY(int b)
+	{
+		this.y = b;
 	}
 	
 	public void setTieneImp(boolean bo)
