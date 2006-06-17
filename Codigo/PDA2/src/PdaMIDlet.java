@@ -3,23 +3,29 @@ import javax.microedition.lcdui.*;
 
 import java.util.Vector;
 
-
+/**
+ * 
+ * @author María Alonso López
+ *
+ */
 
 public class PdaMIDlet extends MIDlet {
 	
-	private PantallaInicio pi;
+	//atributos
+	private PantallaInicio pi;//primera pantalla
+	//displays
 	private Display display;
-	private TextBox otra;
 	private Displayable sig;
+	//botones:
 	private Command salir = new Command("Salir",Command.EXIT,1);//boton esquina izquierda
 	private Command aceptar = new Command("Aceptar",Command.OK,1);//boton esquina derecha
 	private Command atras = new Command("Atrás",Command.EXIT,1);//boton esquina izquierda
 	
-	//Displayable sig;
+	/**
+	 * MÉTODO QUE LANZA LA EJECUCIÓN DEL MIDLET
+	 */
 	public void startApp() {
-		//MÉTODO QUE LANZA LA EJECUCIÓN DEL MIDLET
-		otra = new TextBox("Pantalla siguiente","", 8, TextField.ANY);
-		pi = new PantallaInicio(sig);
+		pi = new PantallaInicio(sig);//primera pantalla
 		display = Display.getDisplay(this);
 		display.setCurrent(pi);
 	}
@@ -34,6 +40,13 @@ public class PdaMIDlet extends MIDlet {
 
 	}
 	
+	/**
+	 * 
+	 * @param Displayable d
+	 * 
+	 * muestra en la pantalla del PDA una alerta en caso de que haya un error en el login y pasa a la siguiente pantalla "d"
+	 * 
+	 */
 	public void errorLogin(Displayable d){
 		Alert aviso = new Alert("El nombre de usuario o la clave personal no son correctas");
         aviso.setType(AlertType.ERROR);
@@ -45,6 +58,13 @@ public class PdaMIDlet extends MIDlet {
 		
 	}
 	
+	/**
+	 * 
+	 * @param Displayable d
+	 * 
+	 * muestra en la pantalla del PDA una alerta en caso de que haya un error de conexión y pasa a la siguiente pantalla "d"
+	 * 
+	 */
 	public void errorConexion(Displayable d){
 		Alert aviso = new Alert("Error en la conexion");
         aviso.setType(AlertType.ERROR);
@@ -55,11 +75,27 @@ public class PdaMIDlet extends MIDlet {
         System.out.println("Error en la conexion");
 	}
 	
+	/**
+	 * 
+	 * @param Displayable d
+	 * 
+	 * pone la pantalla "d" en el display del PDA
+	 * 
+	 */
 	public void pasarPantalla(Displayable d){
 		display = Display.getDisplay(this);
 		display.setCurrent(d);
 	}
 	
+	
+	/**
+	 * 
+	 * @param Displayable d, int imp
+	 * 
+	 * muestra en la pantalla del PDA una alerta en caso informando de la impresora por la que se vana a imprimir los documentos
+	 * solicitados y pasa a la siguiente pantalla "d"
+	 * 
+	 */
 	public void infoImpresora(Displayable d, int imp){
 		Alert infoImpresora = new Alert("Información sobre la impresora");
         infoImpresora.setType(AlertType.INFO);
@@ -69,6 +105,13 @@ public class PdaMIDlet extends MIDlet {
         display.setCurrent(infoImpresora, d);
 	}
 	
+	/**
+	 * 
+	 * @param Displayable d
+	 * 
+	 * muestra en la pantalla del PDA una alerta en caso de que haya un error en el proceso de imprimir y pasa a la siguiente pantalla "d"
+	 * 
+	 */
 	public void errorImpresora(Displayable d){
 		Alert errorImpresora = new Alert("Información sobre la impresora");
         errorImpresora.setType(AlertType.WARNING);
@@ -78,6 +121,15 @@ public class PdaMIDlet extends MIDlet {
         display.setCurrent(errorImpresora);
 	}
 	
+	/**
+	 * 
+	 * @param Displayable d
+	 * @param String exp
+	 * @param String np
+	 * 
+	 * muestra por pantalla del PDA el expediente "exp" de "np" y pasa a la siguiente pantalla "d"
+	 * 
+	 */
 	public void mostrarExpediente(Displayable d, String exp, String np){
 		Alert  alertaExpediente = new Alert("Consulta de expediente");
         alertaExpediente.setType(AlertType.INFO);
@@ -87,6 +139,13 @@ public class PdaMIDlet extends MIDlet {
         display.setCurrent(alertaExpediente, d);
 	}
 	
+	/**
+	 * 
+	 * @param Displayable d
+	 * 
+	 * muestra en la pantalla del PDA una alerta en caso de que haya un error en la consulta de un expediente y pasa a la siguiente pantalla "d"
+	 * 
+	 */
 	public void errorExpediente(Displayable d){
 		Alert aviso = new Alert("Error en la consulta del expediente");
         aviso.setType(AlertType.ERROR);
@@ -96,14 +155,24 @@ public class PdaMIDlet extends MIDlet {
         display.setCurrent(aviso, d);
 	}
 
+	/**
+	 * clase que implementa la pantalla inicial (login) del PDA 
+	 */
 public class PantallaInicio extends Form implements CommandListener, Runnable{
 	
+	//atributos
 	private TextField campoUsuario; //campo de texto para introducir el nombre de usuario
 	private TextField campoClave; //campo de texto para introducir la clave
-	private String clave;
-	private String nombre;
-	Displayable sig ;
+	private String clave;//clave que ha introducido el usuario
+	private String nombre;//nombre que ha introducido el usuario
+	Displayable sig;//siguiente pantalla despues de esta del login
 	
+	/**
+	 * 
+	 * @param Displayable _sig
+	 * 
+	 * constructora parametrizada de la clase
+	 */
 	PantallaInicio(Displayable _sig){
 		super("Inicio de sesión");
 		sig = _sig;
@@ -114,47 +183,48 @@ public class PantallaInicio extends Form implements CommandListener, Runnable{
 		this.addCommand(salir);
 		this.addCommand(aceptar);
 		this.setCommandListener(this);
-		//this.setItemStateListener(listener);
 	}
 	
+	/**
+	 * método de control de los eventos que se generan en la pantalla del MIDlet
+	 */
 	public void commandAction(Command c, Displayable d){
 		if (c == aceptar){
+			//recogemos los datos proporcionados por el usuario
 			nombre = campoUsuario.getString();
 			clave = campoClave.getString();
 			System.out.println(nombre);
 			System.out.println(clave);
+			//llamamos a un nuevo hilo para que realice la tarea de contrastar estos datos con la base de datos
 			Thread t = new Thread(this);
 			t.start();
 		}
-		else if(c.equals(salir)){
+		else if(c.equals(salir)){//salimos de la aplicación
 			System.out.println("estoy saliendo con el boton de salir");
 			destroyApp(true);
 			notifyDestroyed();
 		}
 	}
 	
-	/*ItemStateListener listener = new ItemStateListener(){
-		
-		public void itemStateChanged(Item i){
-			nombre = campoUsuario.getString();
-			clave = campoClave.getString();
-		}	
-	};*/
-	
+	/**
+	 * método que realiza la tarea de contrastar los datos del usuario con la base de datos 
+	 */
 	public void run(){
 		try{
+			//creamos un cliente XML-RPC para llamar remotamente al método de login 
 			org.kxmlrpc.XmlRpcClient xrc = new org.kxmlrpc.XmlRpcClient("http://localhost:8080"); 
-			
+			//vector con los parámetros que se le pasan a la función que llamamos remotamente
 			Vector params = new Vector();
 			params.addElement("personal");
 			params.addElement(new String(nombre));
 	        params.addElement(new String(clave));
 	        try{
+	        	//llamamos remotamente al login de la base de datos
 	        	String respuestaLogIn = (String) xrc.execute("bd.login", params);
 	        	System.out.println(respuestaLogIn);
-	        	if(respuestaLogIn.equals("no"))
+	        	if(respuestaLogIn.equals("no"))//los datos no son correctos 
 	        		errorLogin(sig);
-	        	else
+	        	else//datos correctos
 	        		pasarPantalla(new MenuPrincipal());
 	        } catch (Exception exception) {
 	            System.err.println("JavaClient: " + exception.getMessage());
@@ -168,10 +238,16 @@ public class PantallaInicio extends Form implements CommandListener, Runnable{
 	
 }//fin de la clase PantallaInicio
 
+	/**
+	 * clase que implementa el menú principal de la aplicación 
+	 */
 public class MenuPrincipal extends List implements CommandListener{
 	
-	//private List menu;
-	
+	/**
+	 * 
+	 * constructora no parametrizda
+	 *
+	 */
 	MenuPrincipal(){
 		super("Menú Principal",List.IMPLICIT);
 		//añadimos las opciones de la lista
@@ -183,6 +259,9 @@ public class MenuPrincipal extends List implements CommandListener{
 	    this.setCommandListener((CommandListener)this);
 	}
 	
+	/**
+	 * método de control de los eventos que se generan en la pantalla del MIDlet
+	 */
 	public void commandAction(Command c, Displayable d){
 		if (c.equals(this.SELECT_COMMAND)){
 			  // En función de la opción marcada llamamos al método
@@ -195,14 +274,14 @@ public class MenuPrincipal extends List implements CommandListener{
 			  		System.out.println("quiero consultar un expediente");
 			  		pasarPantalla(new ConsultaExpediente(this));
 			  		break;
-			  	case 2 ://salir
+			  	case 2 ://salimos de la aplicación
 			  		System.out.println("quiero salir");
 			  		destroyApp(true);
 			  		notifyDestroyed();
 			  		break;
 			 }
 		}
-		else if(c.equals(salir)){
+		else if(c.equals(salir)){//salimos de la aplicación
 			System.out.println("estoy saliendo con el boton de salir");
 			destroyApp(true);
 			notifyDestroyed();
@@ -211,14 +290,25 @@ public class MenuPrincipal extends List implements CommandListener{
 }//fin de la clase MenuPrincipal
 
 
+	/**
+	 * clase que imprementa la pantalla de solicitud de impresión
+	 */
 public class MenuImprimir extends Form implements CommandListener, Runnable{
 	
-	TextField datosPaciente;
-	ChoiceGroup documentoAImprimir;
-	String nombrePaciente;
-	int opcionImprimir;
-	Displayable sig ;
+	//atributos
+	TextField datosPaciente;//campo de texto para recoger el nombre del paciente del que se solicita un documento impreso
+	ChoiceGroup documentoAImprimir;//lista de opciones de los documentos que se pueden imprimir
+	String nombrePaciente;//nombre del paciente introducido por el usuario
+	int opcionImprimir;//documento que queremos imprimir (opción de la lista)
+	Displayable sig ;//siguiente pantalla después de esta en la que estamos
 	
+	/**
+	 * 
+	 * @param Displayable _sig
+	 * 
+	 * constructora parametrizada de la clase
+	 * 
+	 */
 	MenuImprimir(Displayable _sig){
 		super("Documento para imprimir");
 		sig = _sig;
@@ -234,40 +324,48 @@ public class MenuImprimir extends Form implements CommandListener, Runnable{
 		this.setCommandListener((CommandListener)this);
 	}
 	
-	
-	
+	/**
+	 * método que implementa la petición de la impresión
+	 */
 	public void run(){
 		try{
+//			creamos un cliente XML-RPC para llamar remotamente al método que imprime
 			org.kxmlrpc.XmlRpcClient xrc = new org.kxmlrpc.XmlRpcClient("http://localhost:8080"); 
-		
+//			vector con los parámetros que se le pasan a la función que llamamos remotamente
 			Vector params = new Vector();
 			params.addElement(nombrePaciente);
 			params.addElement(new Integer(opcionImprimir));
 			try{
+				//hacemos la llamada remota
 				Integer impresora = (Integer)xrc.execute("servidor.imprimir", params);
-				int numeroImpresora = impresora.intValue();
-	    	
-				if(numeroImpresora == 1){
+				int numeroImpresora = impresora.intValue();//obtenemos la impresora por la que se imprimiran los documentos
+				if(numeroImpresora != -1){//no es posible imprimir
 					infoImpresora(new MenuPrincipal(), numeroImpresora);
 				}
 				else{
-					errorImpresora(sig);
+					errorImpresora(sig);//informamos de la impresora por la que se realizará la petición
 				}
 			} catch (Exception exception) {
-	        errorConexion(sig);
+				errorConexion(sig);
 			}
 		}catch(Exception e){
 			System.err.print("error del hilo");
 		}
 	}
+	
+	/**
+	 * método de control de los eventos que se generan en la pantalla del MIDlet
+	 */
 	public void commandAction(Command c, Displayable d){
-		if(c.equals(atras)){
+		if(c.equals(atras)){//pasar a la pantalla anterior
 			pasarPantalla(new MenuPrincipal());
 		}
 		else if (c.equals(aceptar)){
+			//recogemos los datos introducidos por el usuario
 			nombrePaciente = datosPaciente.getString();
 			opcionImprimir = this.documentoAImprimir.getSelectedIndex();
 			System.out.println(nombrePaciente+" "+opcionImprimir);
+			//encargamos a un nuevo hilo la tarea de mandar a imprimir el documento
 			Thread t = new Thread(this);
 			t.start();
 		}
@@ -276,12 +374,23 @@ public class MenuImprimir extends Form implements CommandListener, Runnable{
 }//fin de la clase MenuImprimir
 
 
+/**
+ * clase que implementa la pantalla de solicitud de consulta de expediente
+ */
 public class ConsultaExpediente extends Form implements CommandListener, Runnable{
 	
-	TextField datosPaciente;
-	String nombrePaciente;
-	Displayable sig ;
+	//atributos
+	TextField datosPaciente;//campo de texto para recoger el nombre del paciente del que se solicita la consulta de expediente
+	String nombrePaciente;//nombre del paciente introducido por el usuario
+	Displayable sig ;//siguiente pantalla después de esta en la que estamos
 	
+	/**
+	 * 
+	 * @param Displayable _sig
+	 * 
+	 * constructora parametrizada de la clase
+	 * 
+	 */
 	ConsultaExpediente(Displayable _sig){
 		super("Consulta de expediente");
 		sig = _sig;
@@ -293,18 +402,22 @@ public class ConsultaExpediente extends Form implements CommandListener, Runnabl
 		this.setCommandListener((CommandListener)this);
 	}
 	
+	/**
+	 * método que implementa la tarea de consultar el expediente en la base de datos
+	 */
 	public void run(){
 		try{
+			//creamos un cliente XML-RPC para llamar remotamente al método que consulta expedientes en la base de datos
 			org.kxmlrpc.XmlRpcClient xrc = new org.kxmlrpc.XmlRpcClient("http://localhost:8080"); 
-		
+			//vector con los parámetros que se le pasan a la función que llamamos remotamente
 			Vector params = new Vector();
 			params.addElement(nombrePaciente);
-		
 			try{
+//				hacemos la llamada remota
 				String expediente = (String)xrc.execute("servidor.consultaExpediente", params);
-				if (expediente.equals(""))
+				if (expediente.equals(""))//no existe el expediente
 					errorExpediente(new MenuPrincipal());
-				else
+				else//sino lo mostramos por pantalla
 					mostrarExpediente(sig, expediente, nombrePaciente);
 			} catch (Exception exception) {
 				errorConexion(new MenuPrincipal());
@@ -314,13 +427,18 @@ public class ConsultaExpediente extends Form implements CommandListener, Runnabl
 		}
 	}
 	
+	/**
+	 * método de control de los eventos que se generan en la pantalla del MIDlet
+	 */
 	public void commandAction(Command c, Displayable d){
-		if(c.equals(atras)){
+		if(c.equals(atras)){//pasar a la pantalla anterior
 			pasarPantalla(new MenuPrincipal());
 		}
 		else if (c.equals(aceptar)){
+//			recogemos los datos introducidos por el usuario
 			nombrePaciente = datosPaciente.getString();
 			System.out.println(nombrePaciente);
+//			encargamos a un nuevo hilo la tarea de obtener el expediente de la base de datos
 			Thread t = new Thread(this);
 			t.start();
 		}
