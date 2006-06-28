@@ -122,7 +122,7 @@ public class JavaServer {
     	Nodo n = m.buscaNodoImpresora(posicion);
     	int impresora = n.getnumImpresora();
     	//mandamos a la impresora escojida (variable impresora) el documento pedido (guardados en las variables expediente o analisis dependiendo de lo que tengamos que imprimir)
-    	
+    	Runtime.getRuntime().exec("lpr -P impresora expedinte");
     	//devolvemos al usuario el número de la impresora por la que se llevará a cabo su petición
     	return new Integer(impresora);
     }
