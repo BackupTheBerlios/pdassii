@@ -1,20 +1,10 @@
-\emph{\underline{Objetivo:}}\\
-
-El personal sanitario, dotado de un PDA, solicita la impresi\'on de un documento de un paciente que se encuentre disponible en la base de datos del hospital. Dicha impresi\'on se realizar'a por la impresora m\'as cercana al lugar en el que se ha solicitado \'esta.\\
-
-\emph{\underline{Entradas:}} 
+\emph{\underline{Objetivo:}}\bigskip \\ El personal sanitario, dotado de un PDA, solicita la impresi\'on de un documento de un paciente que se encuentre disponible en la base de datos del hospital. Dicha impresi\'on se realizar'a por la impresora m\'as cercana al lugar en el que se ha solicitado \'esta.\bigskip \\ \emph{\underline{Entradas:}} 
 \begin{itemize}
 \item Documento a imprimir.
 \item Nombre del paciente del que solicitamos el documento a imprimir.
 \end{itemize}
 
-\emph{\underline{Precondiciones:}}\\
-
-Los documentos que se solicitan imprimir deben encontrarse en la base de datos del hospital as'i como el paciente, que tambi'en debe estar registrado en la base de datos.\\
-
-\emph{\underline{Salidas:}}\\
-
-En caso de \'exito: 
+\emph{\underline{Precondiciones:}}\bigskip \\ Los documentos que se solicitan imprimir deben encontrarse en la base de datos del hospital as'i como el paciente, que tambi'en debe estar registrado en la base de datos.\bigskip \\ \emph{\underline{Salidas:}}\bigskip \\ En caso de \'exito: 
 \begin{itemize}
 	\item Confirmaci\'on de la solicitud aceptada.
 	\item Impresora por la que se va a realizar el trabajo.
@@ -25,16 +15,7 @@ En caso de fallo:
 	\item Se informa al usuario de la imposibilidad de realizar la petici\'on.
 \end{itemize}
 
-
-\emph{\underline{Postcondici\'on si \'exito:}}\\
-
-Se realiza la impresi\'on por la impresora m\'as cercana.\\
-
-\emph{\underline{Postcondici\'on si fallo:}}\\
-
-Se informa de que no se ha podido realizar la impresi\'on y se vuelve al men'u principal.\\
-
-\emph{\underline{Actores: }}
+\emph{\underline{Postcondici\'on si \'exito:}}\bigskip \\ Se realiza la impresi\'on por la impresora m\'as cercana.\bigskip \\ \emph{\underline{Postcondici\'on si fallo:}}\bigskip \\ Se informa de que no se ha podido realizar la impresi\'on y se vuelve al men'u principal.\bigskip \\ \emph{\underline{Actores: }}
 \begin{itemize}
 \item Usuario con PDA.
 \item Servidor del hospital.
@@ -52,16 +33,11 @@ Se informa de que no se ha podido realizar la impresi\'on y se vuelve al men'u p
 \item Volvemos al men'u principal.
 \end{enumerate}
 
-\emph{\underline{Secuencias alternativas:}}\\
-
-E1.- Se informa al usuario de que no se puede realizar la impresi'on en ese momento y se le invita a intentarlo m\'as tarde. Volvemos al men'u principal.\\\\
-\\
-
-Para ilustrar mejor est'a secuencia de acciones, incluimos el diagrama de secuencia de este caso de uso:\\
+\emph{\underline{Secuencias alternativas:}}\bigskip \\E1.- Se informa al usuario de que no se puede realizar la impresi'on en ese momento y se le invita a intentarlo m\'as tarde. Volvemos al men'u principal.\bigskip \\ Para ilustrar mejor est'a secuencia de acciones, incluimos el diagrama de secuencia de este caso de uso (Figura \ref{fig:cu_imprimir})
 
 \begin{figure*}[h!]
 	\begin{center}
-        		\framebox{\includegraphics[width=1.0\textwidth]{dsecuenciaimprimir.png}}
+        		\framebox{\includegraphics[scale=0.4]{dsecuenciaimprimir.png}}
      	\end{center}
     	\caption{Diagrama de secuencia de impresi'on de documentos}\label{fig:cu_imprimir}
 \end{figure*}

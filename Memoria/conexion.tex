@@ -1,0 +1,39 @@
+Las llamadas remotas a procedimientos del servidor del hospital (login, consultas a bases de datos...) que se hacen desde el PDA se llevan a cabo a trav'es del protocolo XML-RPC. \bigskip \\  Un mensaje XML-RPC se incrusta en una petici'on POST enviada por el PDA. El servidor del hospital recibe la petici'on, analiza el documento XML, ejecuta el procedimiento con los par'ametros adecuados y devuelve el resultado como un documento XML formateado al PDA mediante respuesta HTTP.\bigskip \\ Para ejemplificar este proceso, transcribimos los respectivos mensajes que se pasan servidor y PDA en el procedimiento de login, cuando queremos iniciar sesi'on con el PDA. \bigskip \\ Primero el PDA env'ia el nombre de usuario y la clave personal que ha introducido el m'edico al servidor del hospital para que contraste estos datos con la base de datos.
+
+\begin{verbatim}
+<methodCall>
+ <methodName>bd.login</methodName>
+ <params>
+  <param>
+   <value>
+    <string>tablaMedicos</string>
+   </value>
+  </param>
+  <param>
+   <value>
+    <string>HOUSE</string>
+   </value>
+  </param>
+  <param>
+   <value>
+    <string>STACY</string>
+   </value>
+  </param>
+ </params>
+</methodCall>
+\end{verbatim}
+
+Una  vez que 'este ha ejecutado el procedimiento solicitado, el servidor env'ia la respuesta con el resultado al PDA:
+
+\begin{verbatim}
+<methodResponse>
+ <methodName>bd.login</methodName>
+ <params>
+  <param>
+   <value>
+    <string>si</string>
+   </value>
+  </param>
+ </params>
+</methodResponse>
+\end{verbatim}

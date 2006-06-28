@@ -1,0 +1,18 @@
+Como ya hemos comentado anteriormente, Java 2 Micro Edition (J2ME), es un subconjunto de J2SE orientado al desarrollo de aplicaciones Java destinadas a dispositivos con capacidades restringidas. \bigskip \\ La arquitectura J2ME est'a dise'nada con la filosof'ia de ser escalable y modular, ya que no se conoce como ser'an los dispositivos en el futuro y debe estar preparada para adaptarse a ellos. Sus caracter'isticas est'an definidas en un entorno global constituido por varias capas, de abajo a arriba:
+
+\begin{enumerate}
+\item Capa correspondiente a la M'aquina Virtual de Java: una versi'on reducida para dispositivos reducidos.
+\item Capa de Configuraci'on: est'a orientada al dispositivo y define el m'inimo conjunto de caracter'isticas de la m'aquina virtual Java y de las librer'ias de clases Java que est'an disponibles para un conjunto de dispositivos.
+\item Capa de Perfil: est'a orientada a la aplicaci'on y define el m'inimo conjunto de APIs disponibles para una determinada familia de dispositivos. Entre los perfiles que se han desarrollado hasta ahora, destaca el perfil PDA, que extiende el perfil CLDC para adecuarse a las ventajas que ofrecen los dispositivos PDA.
+\item Capa del \textit{Perfil para Dispositivos de Informaci'on M'ovil} (MIDP) consiste en un conjunto de APIs Java que permiten la creaci'on de interfaces de usuario, conexiones de red, manipulaci'on de datos, sonido, seguridad...
+\end{enumerate}
+
+La combinaci'on de las tres primeras capas constituye la configuraci'on CLDC, que junto con la capa MIDP forman el entorno de ejecuci'on est'andar pra las aplicaciones y servicios que se pueden descargar din'amincamente sobre los dispositivos de los usuarios finales, como pueden ser los PDA. \bigskip \\ El coraz'on del perfil MIDP es un \textbf{midlet}. Una aplicaci'on midlet extiende la clase MIDlet, que proporciona a esa aplicaci'on la posibilidad de recuperar propiedades, controlar cambios de estado y constituye la interfaz entre el entorno de ejecuci'on del dispositivo y el c'odigo de la aplicaci'on midlet.\bigskip \\ El hecho de que una aplicaci'on midlet extienda la clase MIDlet hace que el programador se vea obligado a implementar los siguiente m'etodos abstractos:
+
+\begin{itemize}
+\item starApp(): en este m'etodo la aplicaci'on hace acopio de los recursos que va a necesitar el midlet y donde se preparan los controladores de eventos.
+\item pauseApp(): este m'etodo es invocado cuando se necesita detener la ejecuci'on del midlet temporalmente.
+\item destroyApp(): este m'etodo es invocado cuando el midlet debe ser destruido o tambi'en puede ser invocado por el propio midlet antes de finalizar su ejecuci'on.
+\end{itemize}
+
+La implementaci'on de estos m'etos asegura que el midlet pueda pasar por todos los estados de su ciclo de vida: DETENIDO, ACTIVO, DESTRUIDO.
