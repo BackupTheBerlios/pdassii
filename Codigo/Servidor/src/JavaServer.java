@@ -71,13 +71,14 @@ public class JavaServer {
      	 	6. informar al usuario
 	 *
 	 */
-    public Integer imprimir(String nombrePaciente, int opcion){
+    public Integer imprimir(String nombrePaciente, int opcion, String ip){
     	String info;//aqui guardo el resultado de la lectura del fichero que es lo que hay que mandar a imprimir
-    	BaseDatos miBase = new BaseDatos("bdpersonal", "maria", "1829");
+    	BaseDatos miBase = new BaseDatos("Hospital", "root", "PD4ss11");
+    	String ruta = "";
     	switch(opcion){
     		case 0: //imprimir un expediente
     			try{
-    				String expediente = miBase.consultaExpediente("pruebaPaciente", nombrePaciente);
+    				String expediente = miBase.consultaExpediente("tablaPacientes", nombrePaciente);
     				int tam = expediente.length();
     				expediente = expediente.substring(0, tam-1);
     				if (expediente == "")
@@ -87,13 +88,15 @@ public class JavaServer {
     					if (info == null)
     						return new Integer(-1);
     				}
+    				ruta = expediente;
     			}catch(Exception e){
     				return new Integer(-1);
     			}
+   
     			break;
     		case 1: //imprimir los ultimos analisis
     			try{
-    				String analisis = miBase.consultaAnalisis("pruebaPaciente", nombrePaciente);
+    				String analisis = miBase.consultaAnalisis("tablaPacientes", nombrePaciente);
     				int tam = analisis.length();
     				analisis = analisis.substring(0, tam-1);
     				if (analisis == "")
@@ -103,6 +106,7 @@ public class JavaServer {
     					if (info == null)
     						return new Integer(-1);
     				}
+    				ruta = analisis;
     				break;
     			}catch(Exception e){
     				return new Integer(-1);
@@ -110,19 +114,34 @@ public class JavaServer {
     			
     	}
     	//triangulamos para obtener la posición en coordenadas desde la que se realiza la petición 
-    	Antena a1 = new Antena(0, 2, 0, 1.4);
-    	Antena a2 = new Antena(0, 0, 2, 1.4);
-    	Antena a3 = new Antena(-2, -1, -1, 2.44);
-    	Antena a4 = new Antena(0, 0, 0, 0);
-    	//Punto posicion = Triangulador.triangula(a1, a2, a3, a4);
-    	Punto posicion = new Punto(32, 3, 0);
+    	//Antena a1 = new Antena(0, 2, 0, 1.4);
+    	//Antena a2 = new Antena(0, 0, 2, 1.4);
+    	//Antena a3 = new Antena(-2, -1, -1, 2.44);
+    	//Antena a4 = new Antena(0, 0, 0, 0);
+    	String a1 = "";
+    	String a2 = "";
+    	String a3 = "";
+    	String a4 = "";
+    	Punto posicion = Triangulador.mide(ip, a1, a2, a3, a4);
+    	//Punto posicion = new Punto(32, 3, 0);
     	//ahora buscamos la impresora más cercana
     	Mapa m = new Mapa();
     	m = m.cargarMapa();
     	Nodo n = m.buscaNodoImpresora(posicion);
     	int impresora = n.getnumImpresora();
     	//mandamos a la impresora escojida (variable impresora) el documento pedido (guardados en las variables expediente o analisis dependiendo de lo que tengamos que imprimir)
-    	Runtime.getRuntime().exec("lpr -P impresora expedinte");
+<<<<<<< JavaServer.java
+    	try{
+            String aux = "lpr -P ";
+            aux = aux.concat(new Integer(impresora).toString());
+            aux = aux.concat(ruta);
+    		Process p = Runtime.getRuntime().exec(aux);
+            int exitVal = p.waitFor();
+            System.out.println("Process exitValue: " + exitVal);
+            }catch (Exception e){
+                    System.out.println("Problem running lpr. " + e);
+            }
+>>>>>>> 1.3
     	//devolvemos al usuario el número de la impresora por la que se llevará a cabo su petición
     	return new Integer(impresora);
     }
