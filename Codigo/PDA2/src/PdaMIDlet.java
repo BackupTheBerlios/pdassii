@@ -1,6 +1,8 @@
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.lcdui.*;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Vector;
 
 /**
@@ -335,9 +337,32 @@ public class MenuImprimir extends Form implements CommandListener, Runnable{
 			Vector params = new Vector();
 			params.addElement(nombrePaciente);
 			params.addElement(new Integer(opcionImprimir));
+			String s;
 			try{
-				//hacemos la llamada remota
-				Integer impresora = (Integer)xrc.execute("servidor.imprimir", params);
+				String comando;
+				String s;
+				//hacemos la llamada remota para medir
+				Vector lista = xrc.execute("servidor.antenas", "192.168.0.11");
+				for (int i = 0; i <4; i ++){
+					comando = "ping -c 1 ";
+					comando = comando.concat((String)lista.elementAt(i));
+					params.add(lista.elementAt(i));
+					Process p = Runtime.getRuntime().exec(comando);
+					BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+					while ((s = stdInput.readLine()) != null) {
+			            if (s.contains("time")){
+			            	String aux = s;
+			            	int aux2 = aux.indexOf("time ");
+			            	s = aux.substring(aux2);
+			            	s = s.replaceAll("time ", "");
+			            	s = s.replaceAll("ms", "");
+			            	double d = Double (s);
+			            	params.add(s);
+			            }
+			        }
+				}
+				//hacemos la llamada remota para imprimir
+				Integer impresora = (Integer)xrc.execute("servidor.mide", params);
 				int numeroImpresora = impresora.intValue();//obtenemos la impresora por la que se imprimiran los documentos
 				if(numeroImpresora != -1){//no es posible imprimir
 					infoImpresora(new MenuPrincipal(), numeroImpresora);

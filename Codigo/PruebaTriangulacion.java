@@ -1,7 +1,12 @@
 import triangulacion.*;
+import java.io.*;
+import java.util.Vector;
+import Servidor.src.*;
+
+import Servidor.src.Antena;
 public class PruebaTriangulacion {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception{
 		
 
 		antena a1 = new antena(0,2,0,1.4);
@@ -37,6 +42,26 @@ public class PruebaTriangulacion {
 		
 
 		triangulador.triangula(a1,a2,a3,a4);
+		Vector lista = Antena.listaAntenas("192.168.0.11");
+		String comando;
+		String s;
+		for (int i = 0; i <4; i ++){
+		comando = "ping -c 1 ";
+		System.out.println((String)lista.elementAt(i));
+		comando = comando.concat((String)lista.elementAt(i));
+		System.out.println((String)comando);
+		Process p = Runtime.getRuntime().exec(comando);
+		BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+		while ((s = stdInput.readLine()) != null) {
+            if (s.contains("time")){
+            	String aux = s;
+            	int aux2 = aux.indexOf("time ");
+            	s = aux.substring(aux2);
+            	s = s.replaceAll("time ", "");
+            	s = s.replaceAll("ms", "");
+            }
+        }
+		}
 	}
-
+	
 }

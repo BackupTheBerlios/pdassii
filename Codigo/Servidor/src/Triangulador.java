@@ -1,5 +1,3 @@
-
-
 import java.io.IOException;
 import java.lang.Math;
 //import Red.antena;
@@ -9,6 +7,7 @@ import java.lang.Math;
  *
  */
 public class Triangulador {
+
 	
 	int pidePlanta(){
 		System.out.println("Introduzca el numero de planta");
@@ -31,6 +30,31 @@ public class Triangulador {
 		System.out.println(a);
 	}
 	
+	public static Punto mide (String a1, String a2, String a3, String a4,double d1,double d2,double d3,double d4) {
+		Punto p;
+		Antena ant1 = new Antena();
+		Antena ant2 = new Antena();
+		Antena ant3 = new Antena();
+		Antena ant4 = new Antena();
+		p = Antena.dameCoordenadas(a1);
+		double ant1d = transforma(d1);
+		ant1.setD(ant1d);
+		ant1.setP(p);
+		p = Antena.dameCoordenadas(a2);
+		double ant2d = transforma(d2);
+		ant2.setD(ant2d);
+		ant2.setP(p);
+		p = Antena.dameCoordenadas(a3);
+		double ant3d = transforma(d3);
+		ant3.setD(ant3d);
+		ant3.setP(p);
+		p = Antena.dameCoordenadas(a4);
+		double ant4d = transforma(d4);
+		ant4.setD(ant4d);
+		ant4.setP(p);
+		p = triangula(ant1, ant2, ant3, ant4);
+		return p;
+	}
 	/**
 	 * @param antena a1, a2, a3, a4
 	 */
@@ -284,6 +308,10 @@ public class Triangulador {
 		//devolvemos el punto a localizar
 		Punto p = new Punto (x,y,z);
 		return p;
-		
+	}
+	
+	public static double transforma(double d){
+		// 1 ms son 6 metros
+		return d*6;
 	}
 }

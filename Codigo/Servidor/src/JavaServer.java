@@ -1,5 +1,6 @@
 import org.apache.xmlrpc.*;
 import java.io.*;
+import java.util.Vector;
 
 public class JavaServer {
 	
@@ -56,6 +57,11 @@ public class JavaServer {
 		}
 	}
 	
+	
+	public Vector antenas(String a){
+		Vector v = Antena.listaAntenas(a);
+		return v;
+	}
 	/**
 	 * 
 	 * @author María Alonso López & Jose David Soria Soler 
@@ -122,15 +128,16 @@ public class JavaServer {
     	String a2 = "";
     	String a3 = "";
     	String a4 = "";
-    	Punto posicion = Triangulador.mide(ip, a1, a2, a3, a4);
-    	//Punto posicion = new Punto(32, 3, 0);
-    	//ahora buscamos la impresora más cercana
+    	int d1 = 0;
+    	int d2 = 0;
+    	int d3 = 0;
+    	int d4 = 0;
+    	Punto posicion = Triangulador.mide(a1, a2, a3, a4,d1,d2,d3,d4);
     	Mapa m = new Mapa();
     	m = m.cargarMapa();
     	Nodo n = m.buscaNodoImpresora(posicion);
     	int impresora = n.getnumImpresora();
     	//mandamos a la impresora escojida (variable impresora) el documento pedido (guardados en las variables expediente o analisis dependiendo de lo que tengamos que imprimir)
-<<<<<<< JavaServer.java
     	try{
             String aux = "lpr -P ";
             aux = aux.concat(new Integer(impresora).toString());
@@ -141,7 +148,6 @@ public class JavaServer {
             }catch (Exception e){
                     System.out.println("Problem running lpr. " + e);
             }
->>>>>>> 1.3
     	//devolvemos al usuario el número de la impresora por la que se llevará a cabo su petición
     	return new Integer(impresora);
     }
