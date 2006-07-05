@@ -1,9 +1,10 @@
-Este es es diagrama de secuencia de la llamada a la localizaci'on.
+Este es es diagrama de secuencia de la llamada a la localizaci'on (figura \ref{fig:localizador}).
 \begin{figure*}[h!]
 	\begin{center}
-        		\framebox{\includegraphics[scale=0.5]{localizador.png}}
+        		\framebox{\includegraphics[scale=0.6]{localizador.png}}
      	\end{center}
-    	\caption{Secuencia de localizaci'on}\label{fig:triang5}
+    	\caption{Secuencia de localizaci'on}
+	\label{fig:localizador}
 \end{figure*}
 
 La llamada a la funci'on triangula se encarga de la localizaci'on de la PDA una vez que se tienen medidas las distancias a los puntos de acceso.\bigskip \\ La localizaci'on corresponde a la resoluci'on del sistema de ecuaciones que se define por el punto de intersecci'on de tres esferas con centro el las coordenadas del punto de acceso y radio la distancia al dispositivo inal'ambrico a localizar. Si los puntos de acceso son:
@@ -44,30 +45,31 @@ Para localizar el punto ($x$,$y$,$z$) tenemos que resolver:
 
 El cuarto punto lo usaremos para comprobar la correci'on de la resolucion o para reemplazar a uno de los anteriores si est'an alineados. En otro caso no es necesario porque sabemos que el punto a localizar est'a dentro del edificio.\bigskip\newline
 
-La resoluci'on anal'itica directa genera denominadores del tipo $x_1 - x_2$, esos denominadores se anulan cuando las antenas est'an en las esquinas de un cuadrado. Esa situaci'on es frecuente asi que es necesario realizar una serie de translaciones y rotaciones para garantizar que los denominadores no se anulan. Hacemos que el origen del sistema de coordenadas est'e en el punto 1, el eje OX pase por el punto 2 y el plano XY pase por el punto 3. \bigskip\newline
+La resoluci'on anal'itica directa genera denominadores del tipo $x_1 - x_2$, esos denominadores se anulan cuando las antenas est'an en las esquinas de un cuadrado. Esa situaci'on es frecuente asi que es necesario realizar una serie de translaciones y rotaciones para garantizar que los denominadores no se anulan. Hacemos que el origen del sistema de coordenadas est'e en el punto 1, el eje OX pase por el punto 2 y el plano XY pase por el punto 3.  Ver figura \ref{fig:triang1}. 
 
 \begin{figure*}[h!]
 	\begin{center}
-        		\framebox{\includegraphics[scale=0.5]{Triangular1.png}}
+        		\framebox{\includegraphics[scale=0.6]{Triangular1.png}}
      	\end{center}
     	\caption{Distribuci'on incial de los puntos}\label{fig:triang1}
 \end{figure*}
 
 
-El primer paso es transladar el origen al punto 1 $(x_1,y_1,z_1)$ desde el origen $(0,0,0)$. El vector de translaci'on es $V = (v_1,v_2,v_3) = (x_1,y_1,z_1) - (0, 0, 0)$. Aplicamos la rotaci'on a los tres puntos. 
+El primer paso es transladar el origen al punto 1 $(x_1,y_1,z_1)$ desde el origen $(0,0,0)$. El vector de translaci'on es $V = (v_1,v_2,v_3) = (x_1,y_1,z_1) - (0, 0, 0)$. Aplicamos la rotaci'on a los tres puntos. Ver figura \ref{fig:triang2}.
 
 \begin{figure*}[h!]
 	\begin{center}
-        		\framebox{\includegraphics[scale=0.5]{Triangular2.png}}
+        		\framebox{\includegraphics[scale=0.6]{Triangular2.png}}
      	\end{center}
     	\caption{Distribuci'on de los puntos tras la translaci'on}\label{fig:triang2}
 \end{figure*}
 
 Rotamos los ejes para transladar el eje OX y que pase por el punto 2.
+Ver figura \ref{fig:triang3}.
 
 \begin{figure*}[h!]
 	\begin{center}
-        		\framebox{\includegraphics[scale=0.5]{Triangular3.png}}
+        		\framebox{\includegraphics[scale=0.6]{Triangular3.png}}
      	\end{center}
     	\caption{'Angulos de rotaci'on}\label{fig:triang3}
 \end{figure*}
@@ -89,22 +91,24 @@ La segunda rotaci'on se corresponde al 'angulo b: $b = \arccos {x_2 \over {\sqrt
 Las rotaciones tambi'en afectan a los puntos 1 y 2. En el caso del punto 1 no es necesario realizar ninguna operaci'on pues se corresponde al origen. Los resultados para el punto 3 son análogos. \bigskip\newline
 
 Rotamos los ejes para que el plano XY y que pase por el punto 3.
+Ver figura \ref{fig:triang5}.
 
 \begin{figure*}[h!]
 	\begin{center}
-        		\framebox{\includegraphics[scale=0.5]{Triangular5.png}}
+        		\framebox{\includegraphics[scale=0.6]{Triangular5.png}}
      	\end{center}
     	\caption{'Angulos de rotaci'on}\label{fig:triang5}
 \end{figure*}
 
 La rotaci'on se corresponde al 'angulo d: $d = \arccos {y_3 \over {\sqrt{z_3²+y_3^2}}}$. El plano XY se alinea con la proyecci'on del punto 3 sobre el plano YZ. 
 
-Tras la reosluci'on anal'itica es necesario dehacer estas modificaciones. 
+Tras la resoluci'on anal'itica es necesario dehacer estas modificaciones. 
 
 \begin{enumerate}
-\item Dehacemos la tercera rotaci'on -d grados.
-\item Dehacemos la segunda rotaci'on -b grados.
-\item Dehacemos la primera rotaci'on -a grados.
-\item Transladamos -V.
+\item Dehacemos la tercera rotaci'on -d grados: \bigskip \\
+$d = \arccos {y_3 \over {\sqrt{z_3²+y_3^2}}}$
+\item Dehacemos la segunda rotaci'on -b grados: \bigskip \\ $b = \arccos {x_2 \over {\sqrt{x_2²+y_2^2}}}$
+\item Dehacemos la primera rotaci'on -a grados.\bigskip \\ $a = \arccos {x_2 \over {\sqrt{x_2²+z_2^2}}}$
+\item Transladamos -V. \bigskip \\ $V = (x_1,y_1,z_1)$
 \end{enumerate}
 
