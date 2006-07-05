@@ -4,4 +4,21 @@
 \item XML-RPC:\bigskip \\Dada la naturaleza de la aplicaci'on, se hac'ia necesario el empleo de un protocolo de intercambio de informaci'on entre el PDA y el servidor del hospital. El protocolo XML-RPC es un protocolo extremadamente ligero para la invocaci'on de procesos remotos sobre una red enviando mensajes XML formateados sobre protocolo HTTP. \bigskip \\Aunque la especificaci'on de J2ME no proporciona soporte nativo para XML-RPC, el proyecto de c'odigo abierto kXML-RPC es una implementaci'on de XML-RPC destinada a dispositivos compatibles MIDP, basada en Kxml , con lo que empleando estas librer'ias ya ten'iamos solucionado el intercambio de informaci'on.\bigskip \\Otra posibilidad era emplear el protocolo Simple Object Access Protocol (SOAP). SOAP es un protocolo ligero de intercambio de informaci'on estructurada en un entorno descentralizado y distribuido. La idea subyace en la creaci'on de este protocolo es proporcionar un mecanismo uniforme para realizar llamadas a procedimientos remotos utilizando HTTP como protocolo de comunicaci'on y XML  como mecanismo de serializaci'on de datos.\bigskip \\XML-RPC y SOAP son protocolos muy similares pero SOAP ofrece una mayor versatilidad a cambio de una mayor sobrecarga. A la hora de la elecci'on ten'iamos que tener presente la escasez de memoria de los dispositivos compatibles J2ME, que el poder de procesamiento no es abundante y que el ancho de banda disponible en los dispositivos m'oviles no es demasiado grandey dado que SOAP proporciona propiedades extra que no eran necesarias para la aplicaci'on, la elecci'on autom'atica fue XML-RPC.
 
 \item MySQL:\bigskip \\En la actualidad, hay muchos sistemas gestores de bases de datos, por ejemplo, Oracle o Microsoft Access. MySQL, es el sistema que hemos escogido para gestionar la base de datos del hospital. El motivo que nos ha impulsado a ello es que est'a desarrollado bajo la filosof'ia de c'odigo abierto y que es multiplataforma. Adem'as, J2SE cuenta con el paquete java.sql que proporciona numerosas utilidades para hacer consultas a bases de datos MySQL desde aplicaciones Java, lo que hace muy f'acil su integraci'on con el programa servidor del hospital.
+
+\item Ubuntu Server:\bigskip \\ En el servidor hemos instalado Ubuntu server. Una variedad de Ubuntu para servidores. Ubuntu es una distribuci'on de Linux, basada en Debian. Sus principales caracter'isticas son:
+\begin{enumerate}
+	\item Se en la distribuci'on Debian.
+	\item Está disponible para Intel x86, AMD64, PowerPC.
+	\item El sistema incluye funciones avanzadas de seguridad y entre sus pol'iticas se encuentra el no activar procesos latentes por omisi'on al momento de instalarse. Por eso mismo, no hay un firewall predeterminado, ya que no existen servicios que puedan atentar a la seguridad del sistema.
+\end{enumerate}
+
+Ubuntu divide todo el software en cuatro secciones:
+\begin{enumerate}
+	\item main 
+	\item estricted
+	\item universe
+	\item multiverse
+\end{enumerate}
+
+\item CUPS: \bigskip \\ Como servidor de impresi'on hemos usado Common Unix Printing System (CUPS). Es un sistema de impresi'on modular para sistemas de operativos unix. Permite que un computador act'ue como servidor de impresi'on. Un computador que ejecuta CUPS act'ua como un servidor que puede aceptar tareas de impresi'on desde otros computadores clientes, los procesa y los env'ia al servidor de impresi'on apropiado. \bigskip \\ CUPS est'a compuesto por una cola de impresi'on con su programaci'on, un sistema de filtros que convierte datos para imprimir hacia formatos que la impresora conozca, y un sistema de soporte que env'ia los datos al dispositivo de impresi'on. CUPS utiliza el protocolo IPP como base para el manejo de tareas de impresi'on y de colas de impresi'on. Tambi'en provee los comandos tradicionales de impresi'on de los sistemas Unix y un soporte limitado de operaciones bajo el protocolo SMP. Los programas de manejo de dispositivo de impresi'on que CUPS provee est'an basados en la Descripción de impresoras PostScript (PPD). Existen varias interfaces de usuario para diferentes plataformas para configurar CUPS, incluso una interfaz Web. CUPS se distribuye bajo licencia GNU General Public License y GNU Lesser General Public License, Versión 2.
 \end{itemize}

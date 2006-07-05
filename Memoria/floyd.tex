@@ -1,0 +1,18 @@
+Pseudoc'odigo del algoritmo de Floyd en el que nos hemos basado para la implementaci'on:
+\begin{verbatim}
+function fw(int[1..n,1..n] graph) {
+    var int[1..n,1..n] dist := graph
+    var int[1..n,1..n] pred
+    for i from 1 to n
+        for j from 1 to n
+            if dist[i,j] < Infinity
+                pred[i,j] := i
+    for k from 1 to n
+        for i from 1 to n
+            for j from 1 to n
+                if dist[i,j] > dist[i,k] + dist[k,j]
+                    dist[i,j] = dist[i,k] + dist[k,j]
+                    pred[i,j] = pred[k,j]
+    return dist
+}
+\end{verbatim}

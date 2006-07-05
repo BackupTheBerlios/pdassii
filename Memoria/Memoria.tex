@@ -5,6 +5,9 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{graphicx}
+\usepackage{makeidx} 
+
+\makeindex
 
 \begin{document}
 
@@ -12,18 +15,23 @@
 \pagebreak
 
 \section{Autorizaci'on}
-		\input{Autorizacion}
+	\input{Autorizacion}
+
 \pagebreak
 
 \section{Resumen}
+	\input{resumen}
+	\input{summary}
 
 \pagebreak
 
 \section{Palabras clave}
+	\input{listapalabras}
 
 \pagebreak
 
 \section{Introducci'on}
+	\input{introduccion}
 
 \pagebreak
 
@@ -38,10 +46,11 @@
 	\subsection{Requisitos funcionales}
 
 	\subsection{Coste econ'omico}
+		\input{coste}
 
 \pagebreak
 
-\section{Casos de uso}
+\index \section{Casos de uso}
 
 	\subsection{Inicio de sesi'on}
 		\input{inicio_sesion}
@@ -65,10 +74,11 @@
 
 \section{An'alisis del sistema}
 
-	\subsection{Triangulaci'on}
+	\index \subsection{Localizaci'on de personal}
 		\input{Triangular}
 
-	\subsection{Algoritmo de Floyd}
+	\subsection{Localizaci'on de dispositivos}
+		\input{analisis}
 
 	\subsection{Conexi'on PDA-Servidor}
 		\input{conexion}
@@ -76,8 +86,7 @@
 	\subsection{Base de datos}
 		\input{base_datos}
 
-	\subsection{Servidor}
-		\input{Servidor}
+	\subsection{Red}
 
 
 \pagebreak
@@ -96,11 +105,17 @@
 	\subsection{J2ME}
 		\input{j2me}
 
-	%\subsection{XML-RPC}
-
-	\subsection{Algoritmo de Floyd}
+	\index \subsection{Algoritmo de Floyd}
+		\input{floyd}
 
 \pagebreak
+
+\section{Agradecimientos}
+	\input{agradecimientos}
+
+\pagebreak	
+
+\printindex
 
 \begin{thebibliography}{XXX}
 
@@ -109,12 +124,20 @@
 	\bibitem{kxmlrpc}http://kxmlrpc.objectweb.org
 	\bibitem{eclipseme}  http://eclipseme.sourceforce.net
 	\bibitem{wikipedia} http://es.wikipedia.org
-	\bibitem{tringulacion}http://www.francispisani.net/2004/04/wifi_y_la_local.html
+	\bibitem{mysql}http://www.programacion.com/bbdd/tutorial/mysql\_basico
+\bibitem{tringulacion}http://www.francispisani.net/2004/04/wifi\_y\_la\_local.html
 	\bibitem{estandarWiFi}http://standards.ieee.org/getieee802/802.11.html
-	\bibitem{cups}http://www.cups.org/
-	\bibitem{ubuntu}http://www.ubuntu-es.org/
-	%\bibitem{mysql}http://www.programacion.com/bbdd/tutorial/mysql_basico
-
+	\bibitem{cups}http://www.cups.org
+	\bibitem{ubuntu}http://www.ubuntu-es.org
+	\bibitem{wifi}http://www.wifi-shootout.com
+	\bibitem{wifi2}http://innovexpo.itee.uq.edu.au/2003/exhibits/s358272/thesis.pdf
+	\bibitem{wifi3}http://www.herecast.com/Herecast.pdf
+	\bibitem{wifi4}http://www.stumbler.net
+\bibitem{wifi5}http://es.tldp.org/Tutoriales/doc-openldap-samba-cups-python/htmls/cups-instalacion.html
+\bibitem{wifi6}http://www.adictosaltrabajo.com/tutoriales/tutoriales.php?pagina=linuxprint
+	\bibitem{wifi7}http://ditec.um.es/aso/teoria/tema7.pdf
+	\bibitem{wifi8}http://forums.wi-fiplanet.com
+	
 \end{thebibliography}
 
 \end{document}

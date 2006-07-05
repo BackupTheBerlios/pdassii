@@ -1,0 +1,14 @@
+\index \subsubsection{Algoritmo de Floyd}
+
+Para llevar a cabo la tarea de localizar la impresora m'as� cercana al la posici'on� del usuario-cliente de la PDA, deb�mos decantarnos por un algoritmo inform'atico que nos facilitara la b'usqueda y localizaci'on del dispositivo m'as  pr'oximo. Se trata de un algoritmo de coste muy eficiente, ya que itera de manera sucesiva por todos y cada uno de los nodos presentes en el mapa, y va actualizando las distancias entre ellos, a pesar de que en un principio no hubiese un camino directo entre ellos. De esta manera, siempre que la distancia encontrada entre dos nodos, utilizando otro del mapa como nodo auxiliar, sea mas peque'no que la hallada hasta ese momento, el algoritmo se encarga de asignar ese resultado a la distancia actual, minimiz'andose de esta manera la distancia y el camino a ese nodo. No podemos asegurar que todos los nodos sean accesibles desde todos los dem'as pero si que podemos asegurar que si hay un camino, este ser'a m'inimo.
+
+\subsubsection{Filtrado de dispositivos}
+
+Una vez conseguido todo el mapa de la planta, con caminos m'inimos entre todos los nodos, lo que resta por hacer ser'a encontrar aqu'el nodo, que siendo el m'as cercano a la posici'on actual del usuario-cliente de la PDA, este contenga una impresora o dispositivo capaz de satisfacer las necesidades de la persona. As'i lo que estamos haciendo es iterando sobre cada nodo, de manera ordenada, comenzando por el nodo m'as cercano y comprobando si este contiene o no ese dispositivo. Si no lo tiene, seguimos iterando pero si lo posee, lo guardamos y pasamos a resolver la correspondencia entre las coordenadas devueltas y la posici'on real dentro del edificio.
+
+\subsubsection{Correspondencia coordenadas-posici'on real}
+
+Llegado hasta aqu'i� solo nos queda resolver de manera anal'itica, cual es la posici'on dentro del edificio, siguiendo el mapa de habitaciones y pasillos, de las coordenadas devueltas por el anterior paso. Esto se resuelve de manera sencilla, ya que tenemos almacenado en la base de datos las dimensiones de cada una de las habitaciones, seg'un la planta, y de esta manera podemos ver "dentro" de que habitaci'on ha ca'ido la posici'on devuelta como resultado.\bigskip \\ Acto seguido, lo 'unico que queda es comunicarle al usuario-cliente a que habitaci'on del edificio (o igualmente a que dispositivo) debe acudir para recoger su solicitud. 
+
+ 
+
