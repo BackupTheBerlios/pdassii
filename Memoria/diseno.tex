@@ -7,3 +7,24 @@ El dise'no de la aplicaci'on es extremadamente modular. Hay dos m'odulos clarame
     	\caption{Diagrama de clases de la aplicaci'on residente en el PDA}
 	\label{fig:dclasesPDA}
 \end{figure*}
+En el servidor tenemos varias partes:\bigskip\\
+\begin{itemize}
+	\item Base de datos
+	\item Localizador de personal: triangulador
+	\item Localizador de dispositivos: mapa
+\end{itemize}
+Tenemos clases que aportan tipos de datos como: \bigskip\\
+\begin{itemize}
+	\item Antena: modela los puntos de acceso
+	\item Punto: modela las posiciones del personal en el hospital
+	\item Nodo: modela los nodos del grafo de salas
+\end{itemize}
+Adem'as est'a la calse JavaServer que contien la parte de la aplicaci'on que recibe las llamadas de la PDA.
+En la figura \ref{fig:dclasesServidor} se muestra el diagrama de clases de la aplicaci'on residente en el servidor.
+\begin{figure*}[h!]
+	\begin{center}
+        		\framebox{\includegraphics[scale=0.1{dclasesServidor.png}} 
+     	\end{center}
+    	\caption{Diagrama de clases de la aplicaci'on residente en el Servidor}
+	\label{fig:dclasesServidor}
+\end{figure*}
