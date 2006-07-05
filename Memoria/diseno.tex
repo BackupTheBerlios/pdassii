@@ -1,0 +1,9 @@
+El dise'no de la aplicaci'on es extremadamente modular. Hay dos m'odulos claramente diferenciados: por un lado tenemos la aplicaci'on residente en el PDA y por otro la aplicaci'on que ejerce de servidor, alojada en el ordenador central del hospital, donde tambi'en se aloja la base de datos.\bigskip \\ En la figura \ref{fig:dclasesPDA}, mostramos el diagrama de clases del MIDlet que implementa la aplicaci'on del PDA. Consta de un 'unico MIDlet, PdaMIDlet, y tiene varias clases auxiliares, PantallaInicio, MenuPrincipal, MenuImprimir y ConsultaExpediente,  con las que se implementan las distintas pantallas que se muestran en la aplicaci'on. Desde PdaMIDlet se llama a la primera pantalla (PantallaInicio) y ellas se comunican entre s'i a trav'es de m'etodos de PdaMIDlet.
+
+\begin{figure*}[h!]
+	\begin{center}
+        		\framebox{\includegraphics[scale=0.55]{dclasesPDA.png}}
+     	\end{center}
+    	\caption{Diagrama de clases de la aplicaci'on residente en el PDA}
+	\label{fig:dclasesPDA}
+\end{figure*}
