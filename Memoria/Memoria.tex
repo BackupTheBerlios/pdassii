@@ -1,56 +1,62 @@
-\documentclass[a4paper,12pt]{article}
+\documentclass[a4paper]{article}
 
 \usepackage[spanish, activeacute]{babel} 
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{graphicx}
-\usepackage{makeidx} 
 
-\makeindex
 
 \begin{document}
-%\makeindex
-\tableofcontents
-\pagebreak
+\input{portada}
+\newpage  
+\begin{large}
+%\tableofcontents
+\input{indice}
+
+\newpage 
 
 \section{Autorizaci'on}
-	\input{Autorizacion}
+	\input{autorizacion}
 
-\pagebreak
+\newpage
 
 \section{Resumen}
 	\input{resumen}
 	\input{summary}
 
-\pagebreak
+\newpage 
 
 \section{Palabras clave}
 	\input{listapalabras}
 
-\pagebreak
 
+\newpage
 \section{Introducci'on}
 	\input{intro}
 
-\pagebreak
+\newpage
 
 \section{Especificaci'on de requisitos}
 
 	\subsection{Descripci'on general}
+		\input{DescGeneral}
 
 	\subsection{Requisitos de interfaces externas}
+		\input{ReqIntExt}
 
 	\subsection{Requisitos no funcionales}
+		\input{ReqNoFun}
 
 	\subsection{Requisitos funcionales}
+		\input{ReqFun}
 
 	\subsection{Coste econ'omico}
 		\input{coste}
 
-\pagebreak
+\newpage
 
-\index \section{Casos de uso}
+ \section{Casos de uso}
 
 	\subsection{Inicio de sesi'on}
 		\input{inicio_sesion}
@@ -60,8 +66,9 @@
 
 	\subsection{Consulta de expedientes}
 		\input{consultar_expediente}		
-
-\pagebreak
+\newpage 
+.
+\newpage
 
 \section{Implementaci'on}
 
@@ -71,11 +78,11 @@
 	\subsection{Dise'no}
 		\input{diseno}
 
-\pagebreak
+\newpage
 
 \section{An'alisis del sistema}
 
-	\index \subsection{Localizaci'on de personal}
+	\subsection{Localizaci'on de personal}
 		\input{Triangular}
 
 	\subsection{Localizaci'on de dispositivos}
@@ -91,51 +98,48 @@
 		\input{red}
 
 
-\pagebreak
+\newpage
+.
+\newpage
 
 \section{Manual de usuario}
 	\input{Manual_usuario}	
 
-\pagebreak
+\newpage
+.
+\newpage
+
+\section{Herramientas de desarrollo}
+	\input{herramientas}
+
+\newpage 
+
+\section{Gesti'on de configuraci'on}
+	\input{gestion}
+
+
+\newpage
 
 \section{Valoraci'on}
+	\input{valoracion}
 
-\pagebreak
+\newpage
 
 \section{Ap'endices}
 
 	\subsection{J2ME}
 		\input{j2me}
 
-<<<<<<< Memoria.tex
-	\index{Algoritmo de Floyd}\subsection{Algoritmo de Floyd}
-		\input{floyd}
-=======
-	\index \subsection{Algoritmo de Floyd}
+	\subsection{Algoritmo de Floyd}
 		\input{floyd}
 
-\pagebreak
+\newpage
 
 \section{Agradecimientos}
 	\input{agradecimientos}
->>>>>>> 1.5
 
-<<<<<<< Memoria.tex
-\pagebreak
-=======
-\pagebreak	
->>>>>>> 1.5
+\newpage	
 
-<<<<<<< Memoria.tex
-\section{Agradecimientos}
-	\input{agradecimientos}
-
-\pagebreak	
-
-\printindex
-=======
-\printindex
->>>>>>> 1.5
 
 \begin{thebibliography}{XXX}
 
@@ -160,4 +164,6 @@
 	
 \end{thebibliography}
 
+\end{large}
 \end{document}
+

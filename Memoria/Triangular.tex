@@ -7,7 +7,14 @@ Este es es diagrama de secuencia de la llamada a la localizaci'on (figura \ref{f
 	\label{fig:localizador}
 \end{figure*}
 
-La llamada a la funci'on triangula se encarga de la localizaci'on de la PDA una vez que se tienen medidas las distancias a los puntos de acceso.\bigskip \\ La localizaci'on corresponde a la resoluci'on del sistema de ecuaciones que se define por el punto de intersecci'on de tres esferas con centro el las coordenadas del punto de acceso y radio la distancia al dispositivo inal'ambrico a localizar. Si los puntos de acceso son:
+El proceso de localizaci'on consta de dos partes:
+\begin{itemize}
+\item Medir las distancias a los puntos de acceso.
+\item aplicar el algoritmo de triangulaci'on.
+\end{itemize}
+Para medir las distancias hay que tener en cuenta la distribuci'on de los puntos de acceso formando cuadrados.
+Pedimos al servidor los puntos que est'en m'as pr'oximos. Medimos la distancia al punto al que nos conectamos (punto A) con una llamada a ping. A continuaci'on hacemos ping al segundo punto de la lista (punto B). Como sabemos la distancia entre los dos puntos y la distancia de la PDA (punto C) al punto A, solo tenemos que aplicar reglas geom'etricas para conocer la distancia del punto B al C, ya que forman un tri'angulo. 
+Repetimos este proceso para los otros dos puntos de la lista.\bigskip \\ La llamada a la funci'on triangula se encarga de la localizaci'on de la PA una vez que se tienen medidas las distancias a los puntos de acceso.\bigskip \\ La localizaci'on corresponde a la resoluci'on del sistema de ecuaciones que se define por el punto de intersecci'on de tres esferas con centro el las coordenadas del punto de acceso y radio la distancia al dispositivo inal'ambrico a localizar. Si los puntos de acceso son:
 
 \begin{enumerate}
 \item Punto 1: 
